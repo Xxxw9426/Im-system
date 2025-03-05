@@ -37,7 +37,7 @@ public class ImportFriendShipReq extends RequestBase {
         private String addSource;
 
         // 好友状态
-        private Integer status= FriendShipStatusEnum.FRIEND_STATUS_NO_FRIEND.getCode();
+        private Integer status= FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode();
 
         // 拉黑状态
         private Integer black=FriendShipStatusEnum.BLACK_STATUS_NORMAL.getCode();

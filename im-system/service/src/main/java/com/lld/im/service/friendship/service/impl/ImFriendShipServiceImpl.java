@@ -1,0 +1,505 @@
+package com.lld.im.service.friendship.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.lld.im.common.ResponseVO;
+import com.lld.im.common.enums.CheckFriendShipTypeEnum;
+import com.lld.im.common.enums.FriendShipErrorCode;
+import com.lld.im.common.enums.FriendShipStatusEnum;
+import com.lld.im.common.exception.ApplicationException;
+import com.lld.im.service.friendship.dao.ImFriendShipEntity;
+import com.lld.im.service.friendship.dao.mapper.ImFriendShipMapper;
+import com.lld.im.service.friendship.model.req.*;
+import com.lld.im.service.friendship.model.resp.CheckFriendShipResp;
+import com.lld.im.service.friendship.model.resp.ImportFriendShipResp;
+import com.lld.im.service.friendship.service.ImFriendShipService;
+import com.lld.im.service.user.dao.ImUserDataEntity;
+import com.lld.im.service.user.service.ImUserService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+ * @Author: 萱子王
+ * @CreateTime: 2025-03-02
+ * @Description: 关系链模块的好友关系业务逻辑实现类
+ * @Version: 1.0
+ */
+
+@Service
+public class ImFriendShipServiceImpl implements ImFriendShipService {
+
+    @Autowired
+    ImFriendShipMapper imFriendShipMapper;
+
+
+    @Autowired
+    ImUserService imUserService;
+
+
+    /***
+     *  导入好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO importFriendShip(ImportFriendShipReq req) {
+
+        // 进行前置校验
+        if(req.getFriendItem().size()>100) {
+             // 返回超出长度限制
+            return ResponseVO.errorResponse(FriendShipErrorCode.IMPORT_SIZE_BEYOND);
+        }
+
+        // 要返回的导入成功的用户id集合
+        List<String> successId = new ArrayList<>();
+        // 要返回的导入失败的用户id集合
+        List<String> errorId=new ArrayList<>();
+
+        // 导入数据
+        for(ImportFriendShipReq.ImportFriendDto dto:req.getFriendItem()){
+
+            // 创建我们要写入数据库的实体类对象
+           ImFriendShipEntity entity = new ImFriendShipEntity();
+            // 将传入的to者的相关信息导入entity
+            BeanUtils.copyProperties(dto,entity);
+            entity.setAppId(req.getAppId());
+            entity.setFromId(req.getFromId());
+            try{
+                int insert = imFriendShipMapper.insert(entity);
+                if(insert==1) {
+                    successId.add(dto.getToId());
+                } else {
+                    errorId.add(dto.getToId());
+                }
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                errorId.add(dto.getToId());
+            }
+        }
+
+        // 封装返回结果
+        ImportFriendShipResp resp = new ImportFriendShipResp();
+        resp.setSuccessId(successId);
+        resp.setErrorId(errorId);
+        return ResponseVO.successResponse(resp);
+    }
+
+
+    /***
+     * 添加好友
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO addFriend(AddFriendReq req) {
+
+        // 首先通过user模块中获取单个用户信息的方法判断要添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> fromInfo = imUserService.getSingleUserInfo(req.getFromId(), req.getAppId());
+        if(!fromInfo.isOk()) {
+            // 直接将错误信息返回
+            return fromInfo;
+        }
+
+        // 然后通过user模块中获取单个用户信息的方法判断被添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> toInfo = imUserService.getSingleUserInfo(req.getToItem().getToId(), req.getAppId());
+        if(!toInfo.isOk()) {
+            // 直接将错误信息返回
+            return toInfo;
+        }
+        return doAddFriend(req.getFromId(),req.getToItem(),req.getAppId());
+    }
+
+
+    /**
+     *  添加好友的业务方法
+     * @param fromId
+     * @param dto
+     * @param appId
+     * @return
+     */
+    @Transactional
+    public ResponseVO doAddFriend(String fromId, FriendDto dto, Integer appId) {
+
+        // 向friend表插入A和B两天记录
+        // 首先判断好友记录是否存在，如果存在，则提示已添加，如果未添加，则写入数据库
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("from_id", fromId);
+        query.eq("app_id", appId);
+        query.eq("to_id", dto.getToId());
+        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        // 不存在好友记录的话将好友添加进数据库
+        if(entity==null) {
+            entity=new ImFriendShipEntity();
+            BeanUtils.copyProperties(dto,entity);
+            entity.setAppId(appId);
+            entity.setFromId(fromId);
+            entity.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+            entity.setCreateTime(System.currentTimeMillis());
+            int insert = imFriendShipMapper.insert(entity);
+            if(insert!=1) {
+                // 返回添加失败
+                return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
+            }
+            // 存在的话 判断状态
+        } else {
+            // 如果好友关系的状态是已添加
+            if(entity.getStatus() == FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode()) {
+                // 返回已添加
+                return ResponseVO.errorResponse(FriendShipErrorCode.TO_IS_YOUR_FRIEND);
+            } else {
+
+                // 更新好友关系中的字段值
+                ImFriendShipEntity update = new ImFriendShipEntity();
+                // 更新addSource
+                if(StringUtils.isNotBlank(dto.getAddSource())) {
+                    update.setAddSource(dto.getAddSource());
+                }
+                // 更新remark
+                if(StringUtils.isNotBlank(dto.getRemark())) {
+                    update.setRemark(dto.getRemark());
+                }
+                // 更新extra
+                if(StringUtils.isNotBlank(dto.getExtra())) {
+                    update.setExtra(dto.getExtra());
+                }
+                // 更新好友关系状态
+                update.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+                int res = imFriendShipMapper.update(update, query);
+                if(res!=1) {
+                    // 返回添加失败
+                    return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
+                }
+            }
+        }
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     *  更新好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO updateFriend(UpdateFriendReq req) {
+
+        // 首先通过user模块中获取单个用户信息的方法判断要添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> fromInfo = imUserService.getSingleUserInfo(req.getFromId(), req.getAppId());
+        if(!fromInfo.isOk()) {
+            // 直接将错误信息返回
+            return fromInfo;
+        }
+
+        // 然后通过user模块中获取单个用户信息的方法判断被添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> toInfo = imUserService.getSingleUserInfo(req.getToItem().getToId(), req.getAppId());
+        if(!toInfo.isOk()) {
+            // 直接将错误信息返回
+            return toInfo;
+        }
+
+        return doUpdate(req.getFromId(),req.getToItem(),req.getAppId());
+    }
+
+
+    /***
+     * 更新好友关系链的业务方法
+     * @param fromId
+     * @param dto
+     * @param appId
+     * @return
+     */
+    public ResponseVO doUpdate(String fromId, FriendDto dto, Integer appId) {
+
+        // 设置执行更新的wrapper:根据联合主键查询满足题意的信息并设置更新信息
+        UpdateWrapper<ImFriendShipEntity> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda().set(ImFriendShipEntity::getAddSource, dto.getAddSource())
+                .set(ImFriendShipEntity::getRemark, dto.getRemark())
+                .set(ImFriendShipEntity::getExtra, dto.getExtra())
+                .eq(ImFriendShipEntity::getFromId, fromId)
+                .eq(ImFriendShipEntity::getAppId, appId)
+                .eq(ImFriendShipEntity::getToId, dto.getToId());
+        // 执行更新
+        imFriendShipMapper.update(null, updateWrapper);
+        return ResponseVO.successResponse();
+
+    }
+
+
+    /***
+     * 删除特定好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO deleteFriend(DeleteFriendReq req) {
+
+        // 首先查询传入的两个用户是否为好友关系
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("from_id", req.getFromId());
+        query.eq("app_id", req.getAppId());
+        query.eq("to_id", req.getToId());
+        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        if(entity==null) {
+            // 返回不是好友关系
+            return ResponseVO.errorResponse(FriendShipErrorCode.TO_IS_NOT_YOUR_FRIEND);
+        } else {
+            // 如果是正常的好友关系执行删除操作
+            if(entity.getStatus() == FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode()) {
+                ImFriendShipEntity update = new ImFriendShipEntity();
+                update.setStatus(FriendShipStatusEnum.FRIEND_STATUS_DELETE.getCode());
+                imFriendShipMapper.update(update, query);
+            // 如果不是正常的好友关系则返回已删除
+            } else {
+                return ResponseVO.errorResponse(FriendShipErrorCode.FRIEND_IS_DELETED);
+            }
+        }
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 删除所有好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO deleteAllFriend(DeleteAllFriendReq req) {
+
+        // 设置根据fromId查询所有与fromId是好友状态的记录的Wrapper
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("from_id", req.getFromId());
+        query.eq("app_id", req.getAppId());
+        query.eq("status", FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+
+        // 设置更新类并且通过Wrapper执行更新删除字段的操作
+        ImFriendShipEntity update=new ImFriendShipEntity();
+        update.setStatus(FriendShipStatusEnum.FRIEND_STATUS_DELETE.getCode());
+        imFriendShipMapper.update(update, query);
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 获取特定好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO getRelation(GetRelationReq req) {
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("from_id", req.getFromId());
+        query.eq("app_id", req.getAppId());
+        query.eq("status", FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+        query.eq("to_id", req.getToId());
+
+        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        // 如果entity为空：两者不是好友或者已经删除好友关系
+        if(entity==null) {
+            return ResponseVO.errorResponse(FriendShipErrorCode.REPEATSHIP_IS_NOT_EXIST);
+        }
+        return ResponseVO.successResponse(entity);
+    }
+
+
+    /***
+     * 获取所有好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO getAllFriendShip(GetAllFriendShipReq req) {
+
+        // 设置根据fromId查询所有与fromId是好友状态的记录的Wrapper
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("from_id", req.getFromId());
+        query.eq("app_id", req.getAppId());
+        query.eq("status", FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+
+        return ResponseVO.successResponse(imFriendShipMapper.selectList(query));
+    }
+
+
+    /***
+     * 批量校验好友关系链
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO checkFriendShip(CheckFriendShipReq req) {
+
+        // 将req中的toIds拿出来放到map里，key是toId的值，value是0
+        Map<String,Integer> result=req.getToIds().stream()
+                .collect(Collectors.toMap(Function.identity(),s->0));
+
+        List<CheckFriendShipResp> res=new ArrayList<>();
+
+        // 单向校验：只需要校验对方是否在fromId的好友列表中
+        if(req.getCheckType()== CheckFriendShipTypeEnum.SINGLE.getType()) {
+            res=imFriendShipMapper.checkFriendShip(req);
+        // 双向校验
+        } else {
+           res=imFriendShipMapper.checkFriendShipBoth(req);
+        }
+
+        // 将返回的res也转成map
+        Map<String,Integer> collect=res.stream()
+                .collect(Collectors.toMap(CheckFriendShipResp::getToId,
+                        CheckFriendShipResp::getStatus));
+
+        // 遍历要查询的toIds，并且判断结果集中是否含有要检验好友关系的toId，如果没有说明查询失败，但是也要把这个toId加入结果集
+        for(String toId:result.keySet()) {
+            if(! collect.containsKey(toId)) {
+                CheckFriendShipResp resp=new CheckFriendShipResp();
+                resp.setToId(toId);
+                resp.setFromId(req.getFromId());
+                // 将查询失败的toId状态设置为0，即无好友关系
+                resp.setStatus(result.get(toId));
+                res.add(resp);
+            }
+        };
+        return ResponseVO.successResponse(res);
+    }
+
+
+    /***
+     * 添加黑名单
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO addBlack(AddFriendShipBlackReq req) {
+
+        // 首先通过user模块中获取单个用户信息的方法判断要添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> fromInfo = imUserService.getSingleUserInfo(req.getFromId(), req.getAppId());
+        if(!fromInfo.isOk()) {
+            // 直接将错误信息返回
+            return fromInfo;
+        }
+
+        // 然后通过user模块中获取单个用户信息的方法判断被添加好友的用户是否存在
+        ResponseVO<ImUserDataEntity> toInfo = imUserService.getSingleUserInfo(req.getToId(), req.getAppId());
+        if(!toInfo.isOk()) {
+            // 直接将错误信息返回
+            return toInfo;
+        }
+
+        // 两个用户都存在:根据三个联合主键查询是否有对应的好友记录
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("app_id", req.getAppId());
+        query.eq("from_id", req.getFromId());
+        query.eq("to_id", req.getToId());
+
+        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        // 如果不存在好友记录：拉入黑名单
+        if(entity==null) {
+            entity = new ImFriendShipEntity();
+            entity.setAppId(req.getAppId());
+            entity.setFromId(req.getFromId());
+            entity.setToId(req.getToId());
+            //entity.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+            entity.setBlack(FriendShipStatusEnum.FRIEND_STATUS_NO_FRIEND.getCode());
+            entity.setCreateTime(System.currentTimeMillis());
+            int insert = imFriendShipMapper.insert(entity);
+            if(insert!=1) {
+                return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
+            }
+        // 存在好友记录，判断好友记录状态
+        } else {
+            // 如果好友已经被拉黑，返回添加黑名单失败
+            if(entity.getBlack()!=null && entity.getBlack()==FriendShipStatusEnum.BLACK_STATUS_BLACKED.getCode()) {
+                return ResponseVO.errorResponse(FriendShipErrorCode.ADD_BLACK_ERROR);
+            // 好友未被拉黑，更新黑名单字段
+            } else {
+                ImFriendShipEntity update = new ImFriendShipEntity();
+                update.setBlack(FriendShipStatusEnum.BLACK_STATUS_BLACKED.getCode());
+                int result = imFriendShipMapper.update(update, query);
+                if(result!=1) {
+                    return ResponseVO.errorResponse(FriendShipErrorCode.ADD_BLACK_ERROR);
+                }
+            }
+        }
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 删除黑名单
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO deleteBlack(DeleteBlackReq req) {
+        // 根据三个联合主键查询好友记录
+        QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
+        query.eq("app_id", req.getAppId());
+        query.eq("from_id", req.getFromId());
+        query.eq("to_id", req.getToId());
+        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        // 判断好友记录中的黑名单值
+        // 如果当前好友记录没有加入黑名单
+        if(entity.getBlack()!=null && entity.getBlack()==FriendShipStatusEnum.BLACK_STATUS_NORMAL.getCode()) {
+            throw new ApplicationException(FriendShipErrorCode.FRIEND_IS_NOT_YOUR_BLACK);
+        }
+        // 如果在黑名单内，修改黑名单字段
+        ImFriendShipEntity update = new ImFriendShipEntity();
+        update.setBlack(FriendShipStatusEnum.BLACK_STATUS_NORMAL.getCode());
+        int update1 = imFriendShipMapper.update(update, query);
+        if(update1==1) {
+            return ResponseVO.successResponse();
+        }
+        return ResponseVO.errorResponse();
+    }
+
+
+    /***
+     * 校验黑名单
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO checkBlack(CheckFriendShipReq req) {
+
+        // 将req中的toIds拿出来放到map里，key是toId的值，value是0
+        Map<String,Integer> result=req.getToIds().stream()
+                .collect(Collectors.toMap(Function.identity(),s->0));
+
+        List<CheckFriendShipResp> res=new ArrayList<>();
+
+        // 单向校验：只需要校验对方是否在fromId的黑名单中
+        if(req.getCheckType()== CheckFriendShipTypeEnum.SINGLE.getType()) {
+            res=imFriendShipMapper.checkFriendShipBlack(req);
+            // 双向校验
+        } else {
+            res=imFriendShipMapper.checkFriendShipBlackBoth(req);
+        }
+
+        // 将返回的res也转成map
+        Map<String,Integer> collect=res.stream()
+                .collect(Collectors.toMap(CheckFriendShipResp::getToId,
+                        CheckFriendShipResp::getStatus));
+
+        // 遍历要查询的toIds，并且判断结果集中是否含有要检验黑名单的toId，如果没有说明查询失败，但是也要把这个toId加入结果集
+        for(String toId:result.keySet()) {
+            if(! collect.containsKey(toId)) {
+                CheckFriendShipResp resp=new CheckFriendShipResp();
+                resp.setToId(toId);
+                resp.setFromId(req.getFromId());
+                // 将查询失败的toId状态设置为0，即无黑名单状态
+                resp.setStatus(result.get(toId));
+                res.add(resp);
+            }
+        };
+        return ResponseVO.successResponse(res);
+    }
+
+
+}
