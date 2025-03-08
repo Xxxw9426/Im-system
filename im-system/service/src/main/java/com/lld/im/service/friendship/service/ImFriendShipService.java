@@ -29,12 +29,32 @@ public interface ImFriendShipService {
     public ResponseVO addFriend(AddFriendReq req);
 
 
+    /**
+     *  添加好友的业务方法
+     * @param fromId
+     * @param dto
+     * @param appId
+     * @return
+     */
+    public ResponseVO doAddFriend(String fromId, FriendDto dto, Integer appId);
+
+
     /***
      *  更新好友关系链
      * @param req
      * @return
      */
     public ResponseVO updateFriend(UpdateFriendReq req);
+
+
+    /***
+     * 更新好友关系链的业务方法
+     * @param fromId
+     * @param dto
+     * @param appId
+     * @return
+     */
+    public ResponseVO doUpdate(String fromId, FriendDto dto, Integer appId);
 
 
     /***

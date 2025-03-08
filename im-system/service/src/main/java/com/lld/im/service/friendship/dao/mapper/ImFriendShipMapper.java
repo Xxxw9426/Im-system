@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+// 关系链模块dao层
 @Mapper
 public interface ImFriendShipMapper extends BaseMapper<ImFriendShipEntity> {
 

@@ -3,6 +3,7 @@ package com.lld.im.service.friendship.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.enums.AllowFriendTypeEnum;
 import com.lld.im.common.enums.CheckFriendShipTypeEnum;
 import com.lld.im.common.enums.FriendShipErrorCode;
 import com.lld.im.common.enums.FriendShipStatusEnum;
@@ -12,6 +13,7 @@ import com.lld.im.service.friendship.dao.mapper.ImFriendShipMapper;
 import com.lld.im.service.friendship.model.req.*;
 import com.lld.im.service.friendship.model.resp.CheckFriendShipResp;
 import com.lld.im.service.friendship.model.resp.ImportFriendShipResp;
+import com.lld.im.service.friendship.service.ImFriendShipRequestService;
 import com.lld.im.service.friendship.service.ImFriendShipService;
 import com.lld.im.service.user.dao.ImUserDataEntity;
 import com.lld.im.service.user.service.ImUserService;
@@ -43,6 +45,10 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
 
     @Autowired
     ImUserService imUserService;
+
+
+    @Autowired
+    ImFriendShipRequestService imFriendShipRequestService;
 
 
     /***
@@ -115,7 +121,26 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
             // 直接将错误信息返回
             return toInfo;
         }
-        return doAddFriend(req.getFromId(),req.getToItem(),req.getAppId());
+
+        // 获取被添加好友用户的添加好友方式
+        ImUserDataEntity data = toInfo.getData();
+        // 如果被添加好友用户的添加好友方式不为空
+        // 添加好友方式为1：直接添加
+        if(data.getFriendAllowType()!=null && data.getFriendAllowType()== AllowFriendTypeEnum.NOT_NEED.getCode()) {
+
+            return doAddFriend(req.getFromId(),req.getToItem(),req.getAppId());
+
+        // 添加好友方式为0：申请添加
+        } else {
+            // 申请流程
+            // 插入一条好友申请的数据
+            ResponseVO responseVO = imFriendShipRequestService.addFriendShipRequest(req.getFromId(), req.getToItem(), req.getAppId());
+            if(!responseVO.isOk()){
+                return responseVO;
+            }
+        }
+        return ResponseVO.successResponse();
+
     }
 
 
@@ -129,34 +154,33 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
     @Transactional
     public ResponseVO doAddFriend(String fromId, FriendDto dto, Integer appId) {
 
-        // 向friend表插入A和B两天记录
-        // 首先判断好友记录是否存在，如果存在，则提示已添加，如果未添加，则写入数据库
+        // 向friend表插入A和B的好友记录
+        // 首先判断A->B好友记录是否存在，如果存在，则提示已添加，如果未添加，则写入数据库
         QueryWrapper<ImFriendShipEntity> query=new QueryWrapper<>();
         query.eq("from_id", fromId);
         query.eq("app_id", appId);
         query.eq("to_id", dto.getToId());
-        ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
+        ImFriendShipEntity fromEntity = imFriendShipMapper.selectOne(query);
         // 不存在好友记录的话将好友添加进数据库
-        if(entity==null) {
-            entity=new ImFriendShipEntity();
-            BeanUtils.copyProperties(dto,entity);
-            entity.setAppId(appId);
-            entity.setFromId(fromId);
-            entity.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
-            entity.setCreateTime(System.currentTimeMillis());
-            int insert = imFriendShipMapper.insert(entity);
+        if(fromEntity==null) {
+            fromEntity=new ImFriendShipEntity();
+            BeanUtils.copyProperties(dto,fromEntity);
+            fromEntity.setAppId(appId);
+            fromEntity.setFromId(fromId);
+            fromEntity.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+            fromEntity.setCreateTime(System.currentTimeMillis());
+            int insert = imFriendShipMapper.insert(fromEntity);
             if(insert!=1) {
                 // 返回添加失败
                 return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
             }
-            // 存在的话 判断状态
+        // 存在的话 判断状态
         } else {
             // 如果好友关系的状态是已添加
-            if(entity.getStatus() == FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode()) {
+            if(fromEntity.getStatus() == FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode()) {
                 // 返回已添加
                 return ResponseVO.errorResponse(FriendShipErrorCode.TO_IS_YOUR_FRIEND);
             } else {
-
                 // 更新好友关系中的字段值
                 ImFriendShipEntity update = new ImFriendShipEntity();
                 // 更新addSource
@@ -178,6 +202,37 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
                     // 返回添加失败
                     return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
                 }
+            }
+        }
+        // 向friend表插入B和A的好友记录
+        // 首先判断B->A好友记录是否存在，如果存在，则提示已添加，如果未添加，则写入数据库
+        QueryWrapper<ImFriendShipEntity> query02=new QueryWrapper<>();
+        query02.eq("from_id", dto.getToId());
+        query02.eq("app_id", appId);
+        query02.eq("to_id", fromId);
+        ImFriendShipEntity toEntity = imFriendShipMapper.selectOne(query02);
+        // 不存在好友记录的话将好友添加进数据库
+        if(toEntity==null) {
+            toEntity=new ImFriendShipEntity();
+            BeanUtils.copyProperties(dto,toEntity);
+            toEntity.setFromId(dto.getToId());
+            toEntity.setToId(fromId);
+            toEntity.setAppId(appId);
+            toEntity.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+            toEntity.setCreateTime(System.currentTimeMillis());
+            int insert = imFriendShipMapper.insert(toEntity);
+            if(insert!=1) {
+                // 返回添加失败
+                return ResponseVO.errorResponse(FriendShipErrorCode.ADD_FRIEND_ERROR);
+            }
+        // 存在的话 判断状态
+        }else{
+            // 如果不是好友关系，重新更新好友关系
+            if(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode() !=
+                    toEntity.getStatus()){
+                ImFriendShipEntity update = new ImFriendShipEntity();
+                update.setStatus(FriendShipStatusEnum.FRIEND_STATUS_NORMAL.getCode());
+                imFriendShipMapper.update(update,query02);
             }
         }
         return ResponseVO.successResponse();
@@ -217,6 +272,7 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
      * @param appId
      * @return
      */
+    @Transactional
     public ResponseVO doUpdate(String fromId, FriendDto dto, Integer appId) {
 
         // 设置执行更新的wrapper:根据联合主键查询满足题意的信息并设置更新信息

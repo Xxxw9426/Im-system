@@ -23,4 +23,7 @@ public class FriendDto {
 
     // 拓展
     private String extra;
+
+    // 添加留言
+    private String addWording;
 }

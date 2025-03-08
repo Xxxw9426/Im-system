@@ -21,7 +21,7 @@ public class CheckFriendShipResp {
     //        4 双方都没有添加 CheckResult_Both_Type_NoRelation
 
     //单向校验黑名单：1 from没有拉黑to，不确定to是否拉黑了from CheckResult_singe_Type_AWithB；
-    //              0 from拉黑to，不确定to是佛拉黑from CheckResult_singe_Type_NoRelation
+    //              0 from拉黑to，不确定to是否拉黑from CheckResult_singe_Type_NoRelation
     //双向校验黑名单 0 检验失败，没找到黑名单关系
     //        1 from没有拉黑to，to也没有拉黑from CheckResult_Type_BothWay
     //        2 from没有拉黑to，to拉黑from CheckResult_Both_Type_AWithB

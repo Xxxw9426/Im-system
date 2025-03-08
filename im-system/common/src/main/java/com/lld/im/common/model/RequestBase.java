@@ -13,4 +13,7 @@ import lombok.Data;
 public class RequestBase {
 
     private Integer appId;
+
+    // 操作人(可以获取到谁正在调用这个接口)
+    private String operator;
 }
