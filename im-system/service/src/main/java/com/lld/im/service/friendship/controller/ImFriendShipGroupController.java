@@ -75,7 +75,8 @@ public class ImFriendShipGroupController {
      * @param appId
      * @return
      */
-    public ResponseVO memberdel(@RequestBody @Validated DeleteFriendShipGroupMemberReq req, Integer appId) {
+    @RequestMapping("/member/del")
+    public ResponseVO memberDel(@RequestBody @Validated DeleteFriendShipGroupMemberReq req, Integer appId) {
         req.setAppId(appId);
         return imFriendShipGroupMemberService.delGroupMember(req);
     }

@@ -45,7 +45,7 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
         query.eq("from_id",req.getFromId());
         query.eq("group_name",req.getGroupName());
         query.eq("app_id",req.getAppId());
-        ImFriendShipGroupEntity entity=new ImFriendShipGroupEntity();
+        ImFriendShipGroupEntity entity=imFriendShipGroupMapper.selectOne(query);
         // 如果分组已经存在则返回分组已存在错误信息
         if(entity!=null) {
             // 判断当前分组的状态
@@ -54,6 +54,13 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
                 ImFriendShipGroupEntity update=new ImFriendShipGroupEntity();
                 update.setDelFlag(DelFlagEnum.NORMAL.getCode());
                 imFriendShipGroupMapper.update(update,query);
+                // 将用户传入的群成员加入数据库
+                AddFriendShipGroupMemberReq addMember=new AddFriendShipGroupMemberReq();
+                addMember.setFromId(req.getFromId());
+                addMember.setToIds(req.getToIds());
+                addMember.setAppId(req.getAppId());
+                addMember.setGroupName(req.getGroupName());
+                imFriendShipGroupMemberService.addGroupMember(addMember);
                 return ResponseVO.successResponse();
             }
             return ResponseVO.errorResponse(FriendShipErrorCode.FRIEND_SHIP_GROUP_IS_EXIST);
