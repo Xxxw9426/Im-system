@@ -2,10 +2,7 @@ package com.lld.im.service.group.service;
 
 import com.lld.im.common.ResponseVO;
 import com.lld.im.service.group.dao.ImGroupEntity;
-import com.lld.im.service.group.model.req.CreateGroupReq;
-import com.lld.im.service.group.model.req.GetGroupInfoReq;
-import com.lld.im.service.group.model.req.ImportGroupReq;
-import com.lld.im.service.group.model.req.UpdateGroupReq;
+import com.lld.im.service.group.model.req.*;
 
 /**
  * @Author: 萱子王
@@ -55,4 +52,36 @@ public interface ImGroupService {
      * @return
      */
     public ResponseVO getGroupInfo(GetGroupInfoReq req);
+
+
+    /***
+     * 获取当前用户加入的所有群聊的信息
+     * @param req
+     * @return
+     */
+    public ResponseVO getJoinedGroup(GetJoinedGroupReq req);
+
+
+    /***
+     *  解散群组(公开群只有群主和APP管理员可以解散群组，私有群只能由APP管理员解散群组)
+     * @param req
+     * @return
+     */
+    public ResponseVO destroyGroup(DestroyGroupReq req);
+
+
+    /***
+     * 转让群组
+     * @param req
+     * @return
+     */
+    public ResponseVO transferGroup(TransferGroupReq req);
+
+
+    /***
+     *  禁言(解禁言)群(只能APP管理员，群主或者管理员才可以禁言群)
+     * @param req
+     * @return
+     */
+    public ResponseVO muteGroup(MuteGroupReq req);
 }

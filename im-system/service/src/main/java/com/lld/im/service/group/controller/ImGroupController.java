@@ -1,10 +1,7 @@
 package com.lld.im.service.group.controller;
 
 import com.lld.im.common.ResponseVO;
-import com.lld.im.service.group.model.req.CreateGroupReq;
-import com.lld.im.service.group.model.req.GetGroupInfoReq;
-import com.lld.im.service.group.model.req.ImportGroupReq;
-import com.lld.im.service.group.model.req.UpdateGroupReq;
+import com.lld.im.service.group.model.req.*;
 import com.lld.im.service.group.service.ImGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -73,7 +70,7 @@ public class ImGroupController {
 
 
     /***
-     *  获取群组信息
+     *  根据groupId获取群组信息
      * @param req
      * @param appId
      * @return
@@ -82,5 +79,65 @@ public class ImGroupController {
     public ResponseVO getGroupInfo(@RequestBody @Validated GetGroupInfoReq req, Integer appId)  {
         req.setAppId(appId);
         return imGroupService.getGroupInfo(req);
+    }
+
+
+    /***
+     * 获取当前用户加入的所有群聊的信息
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/getJoinedGroup")
+    public ResponseVO getJoinedGroup(@RequestBody @Validated GetJoinedGroupReq req,Integer appId, String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupService.getJoinedGroup(req);
+    }
+
+
+    /***
+     * 解散群组(公开群只有群主和APP管理员可以解散群组，私有群只能由APP管理员解散群组)
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/destroyGroup")
+    public ResponseVO destroyGroup(@RequestBody @Validated DestroyGroupReq req, Integer appId, String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupService.destroyGroup(req);
+    }
+
+
+    /***
+     * 转让群组
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/transferGroup")
+    public ResponseVO transferGroup(@RequestBody @Validated TransferGroupReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupService.transferGroup(req);
+    }
+
+
+    /***
+     * 禁言(解禁言)群(只能APP管理员，群主或者管理员才可以禁言群)
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/forbidSendMessage")
+    public ResponseVO forbidSendMessage(@RequestBody @Validated MuteGroupReq req, Integer appId, String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupService.muteGroup(req);
     }
 }

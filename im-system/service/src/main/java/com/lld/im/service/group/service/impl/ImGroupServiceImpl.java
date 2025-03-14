@@ -1,6 +1,8 @@
 package com.lld.im.service.group.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lld.im.common.ResponseVO;
 import com.lld.im.common.enums.GroupErrorCode;
 import com.lld.im.common.enums.GroupMemberRoleEnum;
@@ -20,8 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Author: 萱子王
@@ -169,6 +170,7 @@ public class ImGroupServiceImpl implements ImGroupService {
      * @return
      */
     @Override
+    @Transactional
     public ResponseVO updateGroupInfo(UpdateGroupReq req) {
         // 首先判断传入的要修改群信息的群是否存在
         ResponseVO<ImGroupEntity> group = getGroup(req.getGroupId(), req.getAppId());
@@ -238,5 +240,171 @@ public class ImGroupServiceImpl implements ImGroupService {
             e.printStackTrace();
         }
         return ResponseVO.successResponse(getGroupResp);
+    }
+
+
+    /***
+     * 获取当前用户加入的所有群聊的信息
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO getJoinedGroup(GetJoinedGroupReq req) {
+        // 获取当前用户加入的所有群组id
+        ResponseVO<Collection<String>> groupIds = imGroupMemberService.getMemberJoinedGroup(req);
+        // 结果集
+        List<ImGroupEntity> list=new ArrayList<>();
+        QueryWrapper<ImGroupEntity> query=new QueryWrapper<>();
+        query.eq("app_id", req.getAppId());
+        if(!CollectionUtil.isEmpty(req.getGroupType())) {
+            query.in("group_type", req.getGroupType());
+        }
+        query.in("group_id", groupIds.getData());
+        list=imGroupMapper.selectList(query);
+        // 根据群组id获取群组信息
+        return ResponseVO.successResponse(list);
+    }
+
+
+    /***
+     *  解散群组(公开群只有群主和APP管理员可以解散群组，私有群只能由APP管理员解散群组)
+     * @param req
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseVO destroyGroup(DestroyGroupReq req) {
+        // 默认非APP管理员操作
+        boolean isAdmin=false;
+        // 判断当前群组是否存在
+        QueryWrapper<ImGroupEntity> groupQuery=new QueryWrapper<>();
+        groupQuery.eq("app_id", req.getAppId());
+        groupQuery.eq("group_id", req.getGroupId());
+        ImGroupEntity groupEntity = imGroupMapper.selectOne(groupQuery);
+        // 如果当前群组不存在
+        if(groupEntity==null) {
+            // 抛出异常
+            throw new ApplicationException(GroupErrorCode.GROUP_IS_NOT_EXIST);
+        }
+        // 如果当前群组已经解散
+        if(groupEntity.getStatus() == GroupStatusEnum.DESTROY.getCode()) {
+            // 返回失败
+            throw new ApplicationException(GroupErrorCode.GROUP_IS_DESTROY);
+        }
+        // 如果不是APP管理员
+        if(!isAdmin) {
+            // 如果是私有群
+            if(groupEntity.getStatus() == GroupTypeEnum.PRIVATE.getCode()) {
+                // 返回私有群不允许解散
+                throw new ApplicationException(GroupErrorCode.PRIVATE_GROUP_CAN_NOT_DESTORY);
+            }
+            // 如果是公开群但是非群主或管理员
+            if( groupEntity.getStatus() == GroupTypeEnum.PUBLIC.getCode() && !(groupEntity.getOwnerId().equals(req.getOperator()))) {
+                // 返回此操作需要群主身份
+                throw new ApplicationException(GroupErrorCode.THIS_OPERATE_NEED_OWNER_ROLE);
+            }
+            // 前置校验结束，更新数据库中群组的删除字段状态
+            ImGroupEntity update=new ImGroupEntity();
+            update.setStatus(GroupStatusEnum.DESTROY.getCode());
+            int update1 = imGroupMapper.update(update, groupQuery);
+            if(update1!=1) {
+                throw new ApplicationException(GroupErrorCode.UPDATE_GROUP_BASE_INFO_ERROR);
+            }
+        }
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 转让群组
+     * @param req
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseVO transferGroup(TransferGroupReq req) {
+        // 首先判断当前用户在传入的群组中的身份
+        ResponseVO<GetRoleInGroupResp> currentUser = imGroupMemberService.getRoleInGroupOne(req.getGroupId(), req.getOperator(), req.getAppId());
+        // 如果没有查询到信息
+        if(!currentUser.isOk()) {
+            return currentUser;
+        }
+        // 如果当前用户不是群主
+        if(currentUser.getData().getRole()!=GroupMemberRoleEnum.OWNER.getCode()) {
+            // 返回需要群主操作
+            return ResponseVO.errorResponse(GroupErrorCode.THIS_OPERATE_NEED_OWNER_ROLE);
+        }
+        // 再判断要转让给的用户是否在群聊中
+        ResponseVO<GetRoleInGroupResp> newOwner = imGroupMemberService.getRoleInGroupOne(req.getGroupId(), req.getOwnerId(), req.getAppId());
+        if(!newOwner.isOk()) {
+            return newOwner;
+        }
+        // 判断当前群聊状态
+        QueryWrapper<ImGroupEntity> currentGroup=new QueryWrapper<>();
+        currentGroup.eq("group_id", req.getGroupId());
+        currentGroup.eq("app_id", req.getAppId());
+        ImGroupEntity groupEntity = imGroupMapper.selectOne(currentGroup);
+        // 如果当前群聊已经解散
+        if(groupEntity.getStatus() == GroupStatusEnum.DESTROY.getCode()) {
+            throw new ApplicationException(GroupErrorCode.GROUP_IS_DESTROY);
+        }
+        // 执行转让操作
+        // 这里是更新group表中的群主信息
+        ImGroupEntity updateGroup = new ImGroupEntity();
+        updateGroup.setOwnerId(req.getOwnerId());
+        UpdateWrapper<ImGroupEntity> updateGroupWrapper = new UpdateWrapper<>();
+        updateGroupWrapper.eq("app_id", req.getAppId());
+        updateGroupWrapper.eq("group_id", req.getGroupId());
+        imGroupMapper.update(updateGroup, updateGroupWrapper);
+        // 更新group-member表中的信息
+        imGroupMemberService.transferGroupMember(req.getOwnerId(),req.getGroupId(),req.getAppId());
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 禁言(解禁言)群(只能APP管理员，群主或者管理员才可以禁言群)
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO muteGroup(MuteGroupReq req) {
+        // 首先判断当前群聊是否存在
+        ResponseVO<ImGroupEntity> group = getGroup(req.getGroupId(), req.getAppId());
+        // 当前群不存在
+        if(!group.isOk()) {
+            return group;
+        }
+        // 当前群已解散
+        if(group.getData().getStatus()==GroupStatusEnum.DESTROY.getCode()) {
+            throw new ApplicationException(GroupErrorCode.GROUP_IS_DESTROY);
+        }
+        // 默认非APP管理员操作
+        boolean isAdmin=false;
+        if(!isAdmin) {
+            // 校验当前用户的权限
+            ResponseVO<GetRoleInGroupResp> role = imGroupMemberService.getRoleInGroupOne(req.getGroupId(), req.getOperator(), req.getAppId());
+            // 如果当前用户已经不在群聊中返回错误
+            if(!role.isOk()) {
+                return role;
+            }
+            GetRoleInGroupResp data = role.getData();
+            Integer roleId = data.getRole();
+            // 记录当前用户是否是群主或者管理员
+            boolean isManager = roleId == GroupMemberRoleEnum.MANAGER.getCode() || roleId == GroupMemberRoleEnum.OWNER.getCode();
+            if(!isManager) {
+                throw new ApplicationException(GroupErrorCode.THIS_OPERATE_NEED_MANAGER_ROLE);
+            }
+        }
+        // 权限校验结束后执行更新
+        ImGroupEntity update = new ImGroupEntity();
+        update.setMute(req.getMute());
+
+        UpdateWrapper<ImGroupEntity> wrapper = new UpdateWrapper<>();
+        wrapper.eq("group_id",req.getGroupId());
+        wrapper.eq("app_id",req.getAppId());
+        imGroupMapper.update(update,wrapper);
+
+        return ResponseVO.successResponse();
     }
 }

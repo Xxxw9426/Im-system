@@ -1,7 +1,7 @@
 package com.lld.im.service.group.controller;
 
 import com.lld.im.common.ResponseVO;
-import com.lld.im.service.group.model.req.ImportGroupMemberReq;
+import com.lld.im.service.group.model.req.*;
 import com.lld.im.service.group.service.ImGroupMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +36,97 @@ public class ImGroupMemberController {
         req.setAppId(appId);
         req.setOperator(operator);
         return imGroupMemberService.importGroupMember(req);
+    }
+
+
+    /***
+     *  拉人入群(如果是APP管理员则执行拉人进群操作，否则只有私有群可以拉人入群)
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/add")
+    public ResponseVO addMember(@RequestBody @Validated AddGroupMemberReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.addMember(req);
+    }
+
+
+    /***
+     * 踢人出群(一个)
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/remove")
+    public ResponseVO removeMember(@RequestBody @Validated RemoveGroupMemberReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.removeMember(req);
+    }
+
+
+
+    /***
+     *  退出群聊
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/exit")
+    public ResponseVO exitGroup(@RequestBody @Validated ExitGroupReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.exitGroup(req);
+    }
+
+
+    /***
+     *  更新群成员信息
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/update")
+    public ResponseVO updateGroupMember(@RequestBody @Validated UpdateGroupMemberReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.updateGroupMember(req);
+    }
+
+
+    /***
+     * 获取群组成员信息(单个)
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/getGroupMember")
+    public ResponseVO getGroupMemberInfo(@RequestBody @Validated GetGroupMemberReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.getGroupMemberInfo(req);
+    }
+
+
+    /***
+     * 禁言(解禁言)群成员
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/speak")
+    public ResponseVO speak(@RequestBody @Validated SpeakMemberReq req, Integer appId, String operator)  {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imGroupMemberService.speak(req);
     }
 
 }
