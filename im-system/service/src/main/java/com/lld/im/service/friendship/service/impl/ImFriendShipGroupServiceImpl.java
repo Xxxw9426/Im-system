@@ -2,9 +2,13 @@ package com.lld.im.service.friendship.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lld.im.codec.pack.friendship.AddFriendGroupPack;
+import com.lld.im.codec.pack.friendship.DeleteFriendGroupPack;
 import com.lld.im.common.ResponseVO;
 import com.lld.im.common.enums.DelFlagEnum;
 import com.lld.im.common.enums.FriendShipErrorCode;
+import com.lld.im.common.enums.command.FriendshipEventCommand;
+import com.lld.im.common.model.ClientInfo;
 import com.lld.im.service.friendship.dao.ImFriendShipGroupEntity;
 import com.lld.im.service.friendship.dao.mapper.ImFriendShipGroupMapper;
 import com.lld.im.service.friendship.model.req.AddFriendShipGroupMemberReq;
@@ -12,8 +16,10 @@ import com.lld.im.service.friendship.model.req.AddFriendShipGroupReq;
 import com.lld.im.service.friendship.model.req.DeleteFriendShipGroupReq;
 import com.lld.im.service.friendship.service.ImFriendShipGroupMemberService;
 import com.lld.im.service.friendship.service.ImFriendShipGroupService;
+import com.lld.im.service.utils.MessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: 萱子王
@@ -31,6 +37,10 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
 
     @Autowired
     ImFriendShipGroupMemberService imFriendShipGroupMemberService;
+
+
+    @Autowired
+    MessageProducer messageProducer;
 
 
     /***
@@ -94,6 +104,14 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
             e.printStackTrace();
             return ResponseVO.errorResponse(FriendShipErrorCode.FRIEND_SHIP_GROUP_CREATE_ERROR);
         }
+
+        // 创建好友分组成功后发送tcp通知
+        AddFriendGroupPack pack=new AddFriendGroupPack();
+        pack.setFromId(req.getFromId());
+        pack.setGroupName(req.getGroupName());
+        messageProducer.sendToUserExceptClient(req.getFromId(), FriendshipEventCommand.FRIEND_GROUP_ADD,
+                pack,new ClientInfo(req.getAppId(),req.getClientType(),req.getImei()));
+
         return ResponseVO.successResponse();
     }
 
@@ -127,6 +145,7 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
      * @return
      */
     @Override
+    @Transactional
     public ResponseVO deleteGroup(DeleteFriendShipGroupReq req) {
         // 首先获取当前用户要删除的所有分组
         for(String groupName:req.getGroupName()) {
@@ -146,8 +165,16 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
                 imFriendShipGroupMapper.updateById(update);
                 // 调用memberService层的删除分组中的所有成员的办法删除所有成员
                 imFriendShipGroupMemberService.clearGroupMember(entity.getGroupId());
-            }
 
+                // 删除好友分组成功后发送tcp通知
+                DeleteFriendGroupPack pack=new DeleteFriendGroupPack();
+                pack.setFromId(req.getFromId());
+                pack.setGroupName(groupName);
+                //TCP通知
+                messageProducer.sendToUserExceptClient(req.getFromId(), FriendshipEventCommand.FRIEND_GROUP_DELETE,
+                        pack,new ClientInfo(req.getAppId(),req.getClientType(),req.getImei()));
+
+            }
         }
         return ResponseVO.successResponse();
     }

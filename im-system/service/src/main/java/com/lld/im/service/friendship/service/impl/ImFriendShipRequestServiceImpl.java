@@ -1,9 +1,12 @@
 package com.lld.im.service.friendship.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lld.im.codec.pack.friendship.ApproverFriendRequestPack;
+import com.lld.im.codec.pack.friendship.ReadAllFriendRequestPack;
 import com.lld.im.common.ResponseVO;
 import com.lld.im.common.enums.ApproveFriendRequestStatusEnum;
 import com.lld.im.common.enums.FriendShipErrorCode;
+import com.lld.im.common.enums.command.FriendshipEventCommand;
 import com.lld.im.common.exception.ApplicationException;
 import com.lld.im.service.friendship.dao.ImFriendShipRequestEntity;
 import com.lld.im.service.friendship.dao.mapper.ImFriendShipRequestMapper;
@@ -12,6 +15,7 @@ import com.lld.im.service.friendship.model.req.FriendDto;
 import com.lld.im.service.friendship.model.req.ReadFriendShipRequestReq;
 import com.lld.im.service.friendship.service.ImFriendShipRequestService;
 import com.lld.im.service.friendship.service.ImFriendShipService;
+import com.lld.im.service.utils.MessageProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,10 @@ public class ImFriendShipRequestServiceImpl implements ImFriendShipRequestServic
 
     @Autowired
     ImFriendShipService imFriendShipService;
+
+
+    @Autowired
+    MessageProducer messageProducer;
 
 
     /***
@@ -90,6 +98,13 @@ public class ImFriendShipRequestServiceImpl implements ImFriendShipRequestServic
             // 执行更新操作
             imFriendShipRequestMapper.updateById(entity);
         }
+
+        // 发送好友申请后发送tcp通知
+        // 这里需要注意的是：这里我们不是给发送好友申请的客户端发送tcp通知，而是给接收好友申请的所有客户端发送tcp通知
+        messageProducer.sendToUser(dto.getToId(),
+                null, "", FriendshipEventCommand.FRIEND_REQUEST,
+                entity, appId);
+
         return ResponseVO.successResponse();
 
     }
@@ -132,12 +147,20 @@ public class ImFriendShipRequestServiceImpl implements ImFriendShipRequestServic
             dto.setAddSource(entity.getAddSource());
             dto.setAddWording(entity.getAddWording());
             // 添加好友
-            ResponseVO responseVO = imFriendShipService.doAddFriend(entity.getFromId(), dto, req.getAppId());
+            ResponseVO responseVO = imFriendShipService.doAddFriend(req,entity.getFromId(), dto, req.getAppId());
             // 如果返回的结果不是添加成功并且也不是对方已经是你的好友
             if(! responseVO.isOk() && responseVO.getCode()!=FriendShipErrorCode.TO_IS_YOUR_FRIEND.getCode()) {
                 return responseVO;
             }
         }
+
+        // 审批好友申请后发送tcp通知
+        ApproverFriendRequestPack pack=new ApproverFriendRequestPack();
+        pack.setId(req.getId());
+        pack.setStatus(req.getStatus());
+        messageProducer.sendToUser(entity.getToId(),req.getClientType(),req.getImei(), FriendshipEventCommand
+                .FRIEND_REQUEST_APPROVE,pack,req.getAppId());
+
         return ResponseVO.successResponse();
     }
 
@@ -160,6 +183,13 @@ public class ImFriendShipRequestServiceImpl implements ImFriendShipRequestServic
         update.setReadStatus(1);
         // 更新所有查询到的好友申请阅读状态为已读
         imFriendShipRequestMapper.update(update, queryWrapper);
+
+        // 更新完已读状态后发送tcp通知
+        ReadAllFriendRequestPack pack=new ReadAllFriendRequestPack();
+        pack.setFromId(req.getFromId());
+        messageProducer.sendToUser(req.getFromId(),req.getClientType(),req.getImei(),FriendshipEventCommand
+                .FRIEND_REQUEST_READ,pack,req.getAppId());
+
         return ResponseVO.successResponse();
     }
 

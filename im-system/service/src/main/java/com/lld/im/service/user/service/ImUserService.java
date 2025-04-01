@@ -2,10 +2,7 @@ package com.lld.im.service.user.service;
 
 import com.lld.im.common.ResponseVO;
 import com.lld.im.service.user.dao.ImUserDataEntity;
-import com.lld.im.service.user.model.req.DeleteUserReq;
-import com.lld.im.service.user.model.req.GetUserInfoReq;
-import com.lld.im.service.user.model.req.ImportUserReq;
-import com.lld.im.service.user.model.req.ModifyUserInfoReq;
+import com.lld.im.service.user.model.req.*;
 import com.lld.im.service.user.model.resp.GetUserInfoResp;
 
 /**
@@ -56,4 +53,12 @@ public interface ImUserService {
      * @return
      */
     public ResponseVO modifyUserInfo(ModifyUserInfoReq req);
+
+
+    /***
+     *  IM系统的登录接口，返回IM系统web端地址/tcp地址
+     * @param req
+     * @return
+     */
+   public ResponseVO login(LoginReq req);
 }

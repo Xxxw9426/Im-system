@@ -3,8 +3,7 @@ package com.lld.im.tcp.receiver;
 import com.alibaba.fastjson.JSONObject;
 import com.lld.im.codec.proto.MessagePack;
 import com.lld.im.common.ClientType;
-import com.lld.im.common.command.Command;
-import com.lld.im.common.command.SystemCommand;
+import com.lld.im.common.enums.command.SystemCommand;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.DeviceMultiLoginEnum;
 import com.lld.im.common.model.UserClientDto;
@@ -59,6 +58,7 @@ public class UserLoginMessageListener {
                 for (NioSocketChannel channel : channels) {
                     // 判断当前的登录模式
                     if(loginModel== DeviceMultiLoginEnum.ONE.getLoginMode()) {    // TODO 单端
+
                         // 首先获取当前遍历到的用户的标识：clientType+Imei
                         Integer clientType = (Integer) channel.attr(AttributeKey.valueOf(Constants.ClientType)).get();
                         String imei = (String) channel.attr(AttributeKey.valueOf(Constants.Imei)).get();

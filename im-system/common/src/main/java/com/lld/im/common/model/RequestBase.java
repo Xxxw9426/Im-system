@@ -16,4 +16,8 @@ public class RequestBase {
 
     // 操作人(可以获取到谁正在调用这个接口)
     private String operator;
+
+    private Integer clientType;
+
+    private String imei;
 }

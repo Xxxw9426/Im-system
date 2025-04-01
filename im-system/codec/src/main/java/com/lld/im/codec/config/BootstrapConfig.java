@@ -1,9 +1,6 @@
 package com.lld.im.codec.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * @Author: 萱子王

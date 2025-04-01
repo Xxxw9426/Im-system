@@ -1,6 +1,10 @@
 package com.lld.im.tcp.receiver;
 
+import com.alibaba.fastjson.JSONObject;
+import com.lld.im.codec.proto.MessagePack;
 import com.lld.im.common.constant.Constants;
+import com.lld.im.tcp.receiver.process.BaseProcess;
+import com.lld.im.tcp.receiver.process.ProcessFactory;
 import com.lld.im.tcp.utils.MqFactory;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -68,8 +72,30 @@ public class MessageReceiver {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     // 当监听到消息后的消息处理逻辑
-                    String message = new String(body);
-                    log.info(message);
+                    try {
+                        String message = new String(body);
+                        MessagePack messagePack = JSONObject.parseObject(message, MessagePack.class);
+                        BaseProcess process = ProcessFactory.getMessageProcess(messagePack.getCommand());
+                        process.process(messagePack);
+                        log.info(message);
+                        // 将消息确认回去
+                        /***
+                         * 该方法参数：
+                         *    1. 该条消息的标记符
+                         *    2. 是否批量提交
+                         *     如果我们选择了批量提交(true)的话，就会将当前消息标记符及之前所有标记符的消息都处理掉
+                         */
+                        channel.basicAck(envelope.getDeliveryTag(), false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        /***
+                         * 该方法参数：
+                         *    1. 该条消息的标记符
+                         *    2. 是否批量提交
+                         *    3. 是否重回消息队列
+                         */
+                        channel.basicNack(envelope.getDeliveryTag(), false,false);
+                    }
                 }
             });
         } catch (Exception e) {

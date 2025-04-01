@@ -8,7 +8,7 @@ lim:   # 配置tcp
 
   redis:    # 配置Redis
     mode: single # 单机模式：single 哨兵模式：sentinel 集群模式：cluster
-    database: 1
+    database: 0
     password: 942633
     timeout: 3000 # 超时时间
     poolMinIdle: 8 #最小空闲数

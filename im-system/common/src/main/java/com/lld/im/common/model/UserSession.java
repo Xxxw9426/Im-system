@@ -19,6 +19,9 @@ public class UserSession {
     // 端标识
     private Integer clientType;
 
+    // imei号
+    private String imei;
+
     // 当前用户登录在的服务端id
     private Integer brokerId;
 

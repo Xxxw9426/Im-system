@@ -1,4 +1,4 @@
-package com.lld.im.common.command;
+package com.lld.im.common.enums.command;
 
 /**
  * @Author: 萱子王

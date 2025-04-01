@@ -1,6 +1,7 @@
 package com.lld.im.service.friendship.service;
 
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.model.RequestBase;
 import com.lld.im.service.friendship.model.req.*;
 
 /**
@@ -36,7 +37,7 @@ public interface ImFriendShipService {
      * @param appId
      * @return
      */
-    public ResponseVO doAddFriend(String fromId, FriendDto dto, Integer appId);
+    public ResponseVO doAddFriend(RequestBase requestBase,String fromId, FriendDto dto, Integer appId);
 
 
     /***

@@ -5,11 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.lld.im.codec.pack.LoginPack;
 import com.lld.im.codec.proto.Message;
-import com.lld.im.common.command.SystemCommand;
+import com.lld.im.common.enums.command.SystemCommand;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.ImConnectStatusEnum;
 import com.lld.im.common.model.UserClientDto;
 import com.lld.im.common.model.UserSession;
+import com.lld.im.tcp.publish.MqMessageProducer;
 import com.lld.im.tcp.redis.RedisManager;
 import com.lld.im.tcp.utils.SessionSocketHolder;
 import io.netty.channel.ChannelHandlerContext;
@@ -74,6 +75,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             userSession.setVersion(message.getMessageHeader().getVersion());
             userSession.setConnectState(ImConnectStatusEnum.ONLINE_STATUS.getCode());
             userSession.setBrokerId(brokerId);
+            userSession.setImei(message.getMessageHeader().getImei());
             try{
                 InetAddress localHost = InetAddress.getLocalHost();
                 userSession.setBrokerHost(localHost.getHostAddress());
@@ -116,6 +118,11 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
         } else if(command== SystemCommand.PING.getCommand()) {
             // 将最后一次读写事件的时间设置为当前时间
             ctx.channel().attr(AttributeKey.valueOf(Constants.ReadTime)).set(System.currentTimeMillis());
+
+        // TODO 其他消息或者请求
+        } else{
+            // 调用向逻辑层发送消息的方法发送给逻辑层
+            MqMessageProducer.sendMessage(message,command);
         }
     }
 

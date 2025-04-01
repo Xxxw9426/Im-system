@@ -19,6 +19,7 @@ public class RedisManager {
     public static void init(BootstrapConfig config) {
         // 调用已经封装好的类的方法直接根据配置文件创建RedissonClient
         SingleClientStrategy singleClientStrategy = new SingleClientStrategy();
+        System.out.println(config.getLim().getRedis().getSingle());
         redissonClient= singleClientStrategy.getRedissonClient(config.getLim().getRedis());
         // 启动监听用户登录消息的类
         UserLoginMessageListener userLoginMessageListener = new UserLoginMessageListener(config.getLim().getLoginModel());

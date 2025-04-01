@@ -60,9 +60,9 @@ public class LimServer {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new MessageDecoder());  // 解码器
                         ch.pipeline().addLast(new MessageEncoder());  // 编码器
-//                        ch.pipeline().addLast(new IdleStateHandler(
-//                                0, 0,
-//                                10));         // 设置每超过10秒钟就触发一次检测，并且如果在检测中发现触发了超时事件后，会调用下一个handler的userEventTriggered()方法
+                        ch.pipeline().addLast(new IdleStateHandler(
+                                0, 0,
+                                10));         // 设置每超过10秒钟就触发一次检测，并且如果在检测中发现触发了超时事件后，会调用下一个handler的userEventTriggered()方法
                         ch.pipeline().addLast(new HeartBeatHandler(config.getHeartBeatTime()));
                         ch.pipeline().addLast(new NettyServerHandler(config.getBrokerId()));
                     }

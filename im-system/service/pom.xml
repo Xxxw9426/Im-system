@@ -29,6 +29,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.7.0</version> <!-- 使用 Jedis 3.x -->
+        </dependency>
         <!--  spring boot web  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,10 +65,21 @@
             <artifactId>mybatisplus-plus</artifactId>
             <version>1.5.1-RELEASE</version>
         </dependency>
+        <!--  zookeeper  -->
+        <dependency>
+            <groupId>com.github.sgroschupf</groupId>
+            <artifactId>zkclient</artifactId>
+        </dependency>
         <!--  common  -->
         <dependency>
             <groupId>com.lld</groupId>
             <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--  codec   -->
+        <dependency>
+            <groupId>com.lld</groupId>
+            <artifactId>codec</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

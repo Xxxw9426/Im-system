@@ -40,20 +40,6 @@ public class ImUserDataController {
 
 
     /***
-     * 批量删除用户资料
-     * @param req
-     * @param appId
-     * @return
-     */
-    // TODO 使用@Validated注解来触发DeleteUserReq对象中字段对应注解的验证
-    @RequestMapping("/deleteUser")
-    public ResponseVO deleteUser(@RequestBody @Validated DeleteUserReq req, Integer appId) {
-        req.setAppId(appId);
-        return imUserService.deleteUser(req);
-    }
-
-
-    /***
      * 获取单个用户资料
      * @param req
      * @param appId

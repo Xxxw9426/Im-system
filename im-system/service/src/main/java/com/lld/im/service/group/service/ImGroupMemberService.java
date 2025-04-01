@@ -128,4 +128,22 @@ public interface ImGroupMemberService {
      * @return
      */
     public ResponseVO speak(SpeakMemberReq req);
+
+
+    /***
+     * 获取传入群聊中的所有群成员的id集合
+     * @param groupId
+     * @param appId
+     * @return
+     */
+    public List<String> getGroupMemberId(String groupId, Integer appId);
+
+
+    /***
+     * 获取传入群聊的群管理员
+     * @param groupId
+     * @param appId
+     * @return
+     */
+    public List<GroupMemberDto> getGroupManager(String groupId, Integer appId);
 }

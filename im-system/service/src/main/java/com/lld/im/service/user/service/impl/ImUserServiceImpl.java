@@ -1,19 +1,24 @@
 package com.lld.im.service.user.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lld.im.codec.pack.user.UserModifyPack;
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.config.AppConfig;
+import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.DelFlagEnum;
 import com.lld.im.common.enums.UserErrorCode;
+import com.lld.im.common.enums.command.Command;
+import com.lld.im.common.enums.command.UserEventCommand;
 import com.lld.im.common.exception.ApplicationException;
 import com.lld.im.service.user.dao.ImUserDataEntity;
 import com.lld.im.service.user.dao.mapper.ImUserDataMapper;
-import com.lld.im.service.user.model.req.DeleteUserReq;
-import com.lld.im.service.user.model.req.GetUserInfoReq;
-import com.lld.im.service.user.model.req.ImportUserReq;
-import com.lld.im.service.user.model.req.ModifyUserInfoReq;
+import com.lld.im.service.user.model.req.*;
 import com.lld.im.service.user.model.resp.GetUserInfoResp;
 import com.lld.im.service.user.model.resp.ImportUserResp;
 import com.lld.im.service.user.service.ImUserService;
+import com.lld.im.service.utils.CallbackService;
+import com.lld.im.service.utils.MessageProducer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,15 @@ public class ImUserServiceImpl implements ImUserService {
 
     @Autowired
     ImUserDataMapper imUserDataMapper;
+
+    @Autowired
+    AppConfig appConfig;
+
+    @Autowired
+    CallbackService callbackService;
+
+    @Autowired
+    MessageProducer messageProducer;
 
 
     /***
@@ -230,8 +244,31 @@ public class ImUserServiceImpl implements ImUserService {
         // 更新
         int update1=imUserDataMapper.update(update,queryWrapper);
         if(update1==1){
+            // 执行更新成功后，向其他在线端发送tcp通知
+            UserModifyPack pack = new UserModifyPack();
+            BeanUtils.copyProperties(req,pack);
+            // 调用封装好的业务逻辑中发送消息的方法
+            //messageProducer.sendToUser(req.getUserId(),req.getClientType(),req.getImei(),UserEventCommand.USER_MODIFY,pack,req.getAppId());
+            messageProducer.sendToUser(req.getUserId(),UserEventCommand.USER_MODIFY,pack,req.getAppId());
+
+            // 判断是否需要回调
+            if(appConfig.isModifyUserAfterCallback()) {
+                // 如果需要回调，则调用回调函数
+                callbackService.callback(req.getAppId(), Constants.CallbackCommand.ModifyUserAfter, JSONObject.toJSONString(req));
+            }
             return ResponseVO.successResponse();
         }
         throw new ApplicationException(UserErrorCode.MODIFY_USER_ERROR);
+    }
+
+
+    /***
+     * IM系统的登录接口，返回IM系统web端地址/tcp地址
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO login(LoginReq req) {
+        return ResponseVO.successResponse();
     }
 }
