@@ -1,11 +1,11 @@
-package com.lld.im.service.message.mq;
+package com.lld.im.service.group.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.lld.im.common.constant.Constants;
-import com.lld.im.common.enums.command.MessageCommand;
-import com.lld.im.common.model.message.MessageContent;
-import com.lld.im.service.message.service.P2PMessageService;
+import com.lld.im.common.enums.command.GroupEventCommand;
+import com.lld.im.common.model.message.GroupChatMessageContent;
+import com.lld.im.service.group.service.GroupMessageService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,26 +25,25 @@ import java.util.Map;
 /**
  * @Author: 萱子王
  * @CreateTime: 2025-04-01
- * @Description:  订阅来自IM服务投递给我们的消息
+ * @Description: 群聊消息的业务逻辑层的监听类
  * @Version: 1.0
  */
-
 @Component
-public class ChatOperateReceiver {
+public class GroupChatOperateReceiver {
 
-    private static Logger logger = LoggerFactory.getLogger(ChatOperateReceiver.class);
+    private static Logger logger = LoggerFactory.getLogger(GroupChatOperateReceiver.class);
 
 
     @Autowired
-    P2PMessageService p2pMessageService;
+    GroupMessageService groupMessageService;
 
 
     // 在springboot里面使用消息队列Rabbitmq监听队列的消息的方法
     // 使用rabbitListener注解来注明我们监听的队列
     @RabbitListener(
             bindings = @QueueBinding(
-                    value=@Queue(value= Constants.RabbitConstants.Im2MessageService,durable = "true"),      // @Queue绑定我们的队列，durable:是否持久化
-                    exchange = @Exchange(value=Constants.RabbitConstants.Im2MessageService,durable = "true")    // @Exchange绑定交换机，durable:是否持久化
+                    value=@Queue(value= Constants.RabbitConstants.Im2GroupService,durable = "true"),      // @Queue绑定我们的队列，durable:是否持久化
+                    exchange = @Exchange(value=Constants.RabbitConstants.Im2GroupService,durable = "true")    // @Exchange绑定交换机，durable:是否持久化
             ),concurrency = "1"                                      // concurrency:每一次向我们的队列中拉取多少条消息
 
     )
@@ -60,12 +59,11 @@ public class ChatOperateReceiver {
             // 接下来解析我们的command进行不同的逻辑操作
             JSONObject jsonObject = JSON.parseObject(msg);
             Integer command = jsonObject.getInteger("command");
-            // 如果当前指令是单聊消息
-            if(command.equals(MessageCommand.MSG_P2P.getCommand())) {
-                // 处理单聊消息处理逻辑
-                // 将传来的消息转化我我们的类来接受
-                MessageContent content = jsonObject.toJavaObject(MessageContent.class);
-                p2pMessageService.process(content);
+            // 如果当前指令是群聊消息消息
+            if(command.equals(GroupEventCommand.MSG_GROUP.getCommand())) {
+                // 处理群聊消息处理逻辑
+                GroupChatMessageContent content = jsonObject.toJavaObject(GroupChatMessageContent.class);
+                groupMessageService.process(content);
             }
             channel.basicAck(deliveryTag,false);
 
@@ -76,8 +74,5 @@ public class ChatOperateReceiver {
             //第一个false 表示不批量拒绝，第二个false表示不重回队列
             channel.basicNack(deliveryTag, false, false);
         }
-
-
-
     }
 }

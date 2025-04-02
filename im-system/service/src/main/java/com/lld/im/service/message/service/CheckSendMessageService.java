@@ -6,6 +6,10 @@ import com.lld.im.common.enums.*;
 import com.lld.im.service.friendship.dao.ImFriendShipEntity;
 import com.lld.im.service.friendship.model.req.GetRelationReq;
 import com.lld.im.service.friendship.service.ImFriendShipService;
+import com.lld.im.service.group.dao.ImGroupEntity;
+import com.lld.im.service.group.model.resp.GetRoleInGroupResp;
+import com.lld.im.service.group.service.ImGroupMemberService;
+import com.lld.im.service.group.service.ImGroupService;
 import com.lld.im.service.user.dao.ImUserDataEntity;
 import com.lld.im.service.user.service.ImUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,14 @@ public class CheckSendMessageService {
 
     @Autowired
     AppConfig appConfig;
+
+
+    @Autowired
+    ImGroupService imGroupService;
+
+
+    @Autowired
+    ImGroupMemberService imGroupMemberService;
 
 
     /***
@@ -119,6 +131,49 @@ public class CheckSendMessageService {
                 }
 
             }
+        }
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 用户发送群组消息的前置校验
+     * @param fromId
+     * @param groupId
+     * @param appId
+     * @return
+     */
+    public ResponseVO checkGroupMessage(String fromId, String groupId, Integer appId) {
+
+        // 首先判断当前发送消息的用户是否被禁言
+        ResponseVO responseVO = checkSenderForbidAndMute(fromId, appId);
+        if(!responseVO.isOk()) {
+            return responseVO;
+        }
+        // 判断群逻辑
+        // 首先获取群并判断群聊是否存在
+        ResponseVO<ImGroupEntity> group = imGroupService.getGroup(groupId, appId);
+        if(!group.isOk()) {
+            return group;
+        }
+        // 判断发送消息的用户是否在群内
+        ResponseVO<GetRoleInGroupResp> roleInGroupOne = imGroupMemberService.getRoleInGroupOne(groupId, fromId, appId);
+        if(!roleInGroupOne.isOk()) {
+            return roleInGroupOne;
+        }
+        // 拿到消息发送者的身份
+        GetRoleInGroupResp roleData = roleInGroupOne.getData();
+        // 判断群是否被禁言，如果禁言，只有群管理和群主可以发言
+        ImGroupEntity groupData = group.getData();
+        // 如果当前群禁言并且发送消息的用户既不是群主也不是管理员
+        if( groupData.getMute()==GroupMuteTypeEnum.MUTE.getCode()  && (roleData.getRole()!=GroupMemberRoleEnum.MANAGER.getCode())
+                && (roleData.getRole()!=GroupMemberRoleEnum.OWNER.getCode()) ) {
+            return ResponseVO.errorResponse(GroupErrorCode.THIS_GROUP_IS_MUTE);
+        }
+        // 判断个人是否禁言
+        // 如果当前用户被禁言了并且禁言结束事件在当前时间之后
+        if(roleData.getSpeakDate()!=null && roleData.getSpeakDate() > System.currentTimeMillis()) {
+            return ResponseVO.errorResponse(GroupErrorCode.GROUP_MEMBER_IS_SPEAK);
         }
         return ResponseVO.successResponse();
     }

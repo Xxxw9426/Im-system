@@ -2,6 +2,7 @@ package com.lld.im.service.group.controller;
 
 import com.lld.im.common.ResponseVO;
 import com.lld.im.service.group.model.req.*;
+import com.lld.im.service.group.service.GroupMessageService;
 import com.lld.im.service.group.service.ImGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,9 @@ public class ImGroupController {
     @Autowired
     ImGroupService imGroupService;
 
+
+    @Autowired
+    GroupMessageService groupMessageService;
 
     /***
      *  导入群组(1个)
@@ -139,5 +143,20 @@ public class ImGroupController {
         req.setAppId(appId);
         req.setOperator(operator);
         return imGroupService.muteGroup(req);
+    }
+
+
+    /***
+     *  提供的接入IM服务的服务或者APP管理员的群聊发消息的接口
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/sendMessage")
+    public ResponseVO sendMessage(@RequestBody @Validated SendGroupMessageReq req,Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return ResponseVO.successResponse(groupMessageService.send(req));
     }
 }

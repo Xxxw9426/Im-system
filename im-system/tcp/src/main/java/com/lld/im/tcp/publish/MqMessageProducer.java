@@ -26,6 +26,10 @@ public class MqMessageProducer {
     public static void sendMessage(Message message,Integer command) {
         Channel channel = null;
         String channelName= Constants.RabbitConstants.Im2MessageService;
+        // 根据command的值判断当前的业务操作类型，将它投递到对应的业务逻辑层
+        if(command.toString().startsWith("2")) {
+            channelName=Constants.RabbitConstants.Im2GroupService;
+        }
         try{
             // 拿channelName获取我们的channel
             channel=MqFactory.getChannel(channelName);

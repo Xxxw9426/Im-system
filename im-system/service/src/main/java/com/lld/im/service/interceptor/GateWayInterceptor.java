@@ -30,6 +30,7 @@ public class GateWayInterceptor implements HandlerInterceptor {
     // 进行userSign的鉴权
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         // 获取请求参数中的appId，操作人和userSign
         String appIdStr = request.getParameter("appId");
         if(StringUtils.isBlank(appIdStr)){
