@@ -21,6 +21,7 @@ public class ImMessageHistoryEntity {
 
     /** messageBodyId*/
     private Long messageKey;
+
     /** 序列号*/
     private Long sequence;
 

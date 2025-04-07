@@ -480,7 +480,7 @@ public class ImFriendShipServiceImpl implements ImFriendShipService {
         ImFriendShipEntity entity = imFriendShipMapper.selectOne(query);
         // 如果entity为空：两者不是好友或者已经删除好友关系
         if(entity==null) {
-            return ResponseVO.errorResponse(FriendShipErrorCode.REPEATSHIP_IS_NOT_EXIST);
+            return ResponseVO.errorResponse(FriendShipErrorCode.FRIEND_IS_DELETED);
         }
         return ResponseVO.successResponse(entity);
     }

@@ -12,14 +12,16 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.lld.im.codec.proto.MessagePack;
+import redis.clients.jedis.Client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @Author: 萱子王
  * @CreateTime: 2025-03-27
- * @Description: 向mq中发送tpc通知消息的实体类
+ * @Description: 向mq中发送tpc通知消息
  * @Version: 1.0
  */
 @Component
@@ -91,17 +93,24 @@ public class MessageProducer {
 
     /***
      * 发送给指定用户所有端的方法
+     * TODO 返回值是成功发送的客户端
      * @param toId
      * @param command
      * @param data
      * @param appId
      */
-    public void sendToUser(String toId,Command command,Object data,Integer appId) {
+    public List<ClientInfo> sendToUser(String toId,Command command,Object data,Integer appId) {
         // 获取指定用户所有在线的session
         List<UserSession> userSessions = userSessionUtils.getUserSessions(appId, toId);
+        List<ClientInfo> list = new ArrayList<>();
+
         for(UserSession session : userSessions) {
-            sendPack(toId,command,data,session);
+            boolean b = sendPack(toId, command, data, session);
+            if(b) {
+                list.add(new ClientInfo(session.getAppId(),session.getClientType(),session.getImei()));
+            }
         }
+        return list;
     }
 
 

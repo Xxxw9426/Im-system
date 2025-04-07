@@ -45,7 +45,7 @@ public class ImportGroupReq extends RequestBase {
 
     private Integer status;//群状态 0正常 1解散
 
-    private Long sequence;
+    private Long sequence;  // 消息的序列号
 
     private Long createTime;
 

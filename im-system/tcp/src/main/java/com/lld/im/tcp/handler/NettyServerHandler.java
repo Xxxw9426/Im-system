@@ -4,15 +4,27 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.lld.im.codec.pack.LoginPack;
+import com.lld.im.codec.pack.group.GroupMessagePack;
+import com.lld.im.codec.pack.message.ChatMessageAck;
 import com.lld.im.codec.proto.Message;
+import com.lld.im.codec.proto.MessagePack;
+import com.lld.im.common.ResponseVO;
+import com.lld.im.common.enums.command.GroupEventCommand;
+import com.lld.im.common.enums.command.MessageCommand;
 import com.lld.im.common.enums.command.SystemCommand;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.ImConnectStatusEnum;
 import com.lld.im.common.model.UserClientDto;
 import com.lld.im.common.model.UserSession;
+import com.lld.im.common.model.message.CheckSendMessageReq;
+import com.lld.im.tcp.feign.FeignMessageService;
 import com.lld.im.tcp.publish.MqMessageProducer;
 import com.lld.im.tcp.redis.RedisManager;
 import com.lld.im.tcp.utils.SessionSocketHolder;
+import feign.Feign;
+import feign.Request;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -40,8 +52,21 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
     private static Integer brokerId;
 
 
-    public NettyServerHandler(Integer brokerId) {
+    private FeignMessageService feignMessageService;
+
+
+    // 服务层的地址
+    private String logicUrl;
+
+
+    public NettyServerHandler(Integer brokerId,String logicUrl) {
         this.brokerId = brokerId;
+        feignMessageService= Feign.builder()
+                .encoder(new JacksonEncoder())     // 编码器
+                .decoder(new JacksonDecoder())     // 解码器
+                .options(new Request.Options(1000,3500))   // 设置超时时间
+                .target(FeignMessageService.class,logicUrl);    // 代理对象
+
     }
 
     // 有读写事件发生的时候触发
@@ -108,7 +133,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             RTopic topic = redissonClient.getTopic(Constants.RedisConstants.UserLoginChannel);
             topic.publish(JSONObject.toJSONString(dto));
 
-            // TODO 如果当前指令是登出
+        // TODO 如果当前指令是登出
         } else if(command== SystemCommand.LOGOUT.getCommand()) {
 
             SessionSocketHolder.removeUserSession((NioSocketChannel) ctx.channel());
@@ -119,11 +144,60 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             // 将最后一次读写事件的时间设置为当前时间
             ctx.channel().attr(AttributeKey.valueOf(Constants.ReadTime)).set(System.currentTimeMillis());
 
-        // TODO 其他消息或者请求
+        // TODO 如果当前指令是单聊消息或者群聊消息
+        }else if(command== MessageCommand.MSG_P2P.getCommand() || command== GroupEventCommand.MSG_GROUP.getCommand()) {
+            try {
+                String toId="";
+                CheckSendMessageReq req = new CheckSendMessageReq();
+                req.setAppId(message.getMessageHeader().getAppId());
+                req.setCommand(command);
+                JSONObject jsonObject = JSON.parseObject(JSONObject.toJSONString(message.getMessagePack()));
+                String fromId = jsonObject.getString("fromId");
+                if(command== MessageCommand.MSG_P2P.getCommand()) {
+                    toId = jsonObject.getString("toId");
+                } else {
+                    toId = jsonObject.getString("groupId");
+                }
+                req.setFromId(fromId);
+                req.setToId(toId);
+                // 1. 调用校验消息发送方的接口
+                ResponseVO responseVO = feignMessageService.checkSendMessage(req);
+                // 2. 如果成功投递给业务逻辑的MQ
+                if(responseVO.isOk()) {
+                    MqMessageProducer.sendMessage(message,command);
+                } else {
+                    Integer ackCommand=0;
+                    if(command== MessageCommand.MSG_P2P.getCommand()){
+                        ackCommand=MessageCommand.MSG_ACK.getCommand();
+                    } else {
+                        ackCommand=GroupEventCommand.GROUP_MSG_ACK.getCommand();
+                    }
+                    // 3. 失败则直接ack
+                    ChatMessageAck chatMessageAck = new ChatMessageAck(jsonObject.getString("messageId"));
+                    MessagePack<ResponseVO> ack=new MessagePack<>();
+                    responseVO.setData(chatMessageAck);
+                    ack.setData(responseVO);
+                    ack.setCommand(ackCommand);
+                    ctx.channel().writeAndFlush(ack);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // TODO 其他消息或者请求
         } else{
             // 调用向逻辑层发送消息的方法发送给逻辑层
             MqMessageProducer.sendMessage(message,command);
         }
+    }
+
+
+    //表示 channel 处于不活动状态，当channel处于不活跃状态的时候会调用这个方法
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        //设置离线
+        SessionSocketHolder.offlineUserSession((NioSocketChannel) ctx.channel());
+        ctx.close();
     }
 
 

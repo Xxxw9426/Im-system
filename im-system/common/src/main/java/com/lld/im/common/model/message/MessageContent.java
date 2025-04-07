@@ -31,6 +31,9 @@ public class MessageContent extends ClientInfo {
     // 客户端发送消息的时间
     private Long messageTime;
 
+    // 消息的序列号
+    private long messageSequence;
+
     // 拓展字段
     private String extra;
 }

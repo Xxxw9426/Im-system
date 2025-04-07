@@ -19,6 +19,7 @@ public class ImGroupMessageHistoryEntity {
 
     /** messageBodyId*/
     private Long messageKey;
+
     /** 序列号*/
     private Long sequence;
 

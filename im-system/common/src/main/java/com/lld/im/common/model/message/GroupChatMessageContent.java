@@ -2,6 +2,8 @@ package com.lld.im.common.model.message;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Author: 萱子王
  * @CreateTime: 2025-04-01
@@ -14,5 +16,8 @@ public class GroupChatMessageContent extends MessageContent {
 
     // 群组id
     private String groupId;
+
+    // 群成员id
+    private List<String> memberId;
 }
 

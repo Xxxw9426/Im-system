@@ -1,0 +1,181 @@
+2025-04-05 14:45:18 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 30560 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 14:45:18 -The following profiles are active: dev
+2025-04-05 14:45:19 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-05 14:45:19 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-05 14:45:19 -Finished Spring Data repository scanning in 14ms. Found 0 Redis repository interfaces.
+2025-04-05 14:45:19 -Tomcat initialized with port(s): 8000 (http)
+2025-04-05 14:45:19 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-05 14:45:19 -Starting service [Tomcat]
+2025-04-05 14:45:19 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-05 14:45:20 -Initializing Spring embedded WebApplicationContext
+2025-04-05 14:45:20 -Root WebApplicationContext: initialization completed in 1201 ms
+2025-04-05 14:45:21 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-05 14:45:21 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-05 14:45:21 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-05 14:45:21 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 14:45:21 -Created new connection: rabbitConnectionFactory#3743539f:0/SimpleConnection@3bc69ce9 [delegate=amqp://root@192.168.88.130:5672/, localPort= 55396]
+2025-04-05 14:45:21 -Started ServiceApplication in 3.505 seconds (JVM running for 4.03)
+2025-04-05 14:47:20 -Waiting for workers to finish.
+2025-04-05 14:47:21 -Successfully waited for workers to finish.
+2025-04-05 14:47:21 -Waiting for workers to finish.
+2025-04-05 14:47:21 -Successfully waited for workers to finish.
+2025-04-05 14:47:21 -Shutdown ignored - container is not active already
+2025-04-05 14:47:21 -Shutdown ignored - container is not active already
+2025-04-05 14:47:21 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-05 14:57:13 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 41812 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 14:57:13 -The following profiles are active: dev
+2025-04-05 14:57:14 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-05 14:57:14 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-05 14:57:14 -Finished Spring Data repository scanning in 15ms. Found 0 Redis repository interfaces.
+2025-04-05 14:57:14 -Tomcat initialized with port(s): 8000 (http)
+2025-04-05 14:57:14 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-05 14:57:14 -Starting service [Tomcat]
+2025-04-05 14:57:14 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-05 14:57:14 -Initializing Spring embedded WebApplicationContext
+2025-04-05 14:57:14 -Root WebApplicationContext: initialization completed in 1128 ms
+2025-04-05 14:57:16 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-05 14:57:16 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-05 14:57:16 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-05 14:57:16 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 14:57:16 -Created new connection: rabbitConnectionFactory#1b1c538d:0/SimpleConnection@7fda2001 [delegate=amqp://root@192.168.88.130:5672/, localPort= 56016]
+2025-04-05 14:57:16 -Started ServiceApplication in 3.497 seconds (JVM running for 4.014)
+2025-04-05 15:00:06 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-05 15:00:06 -Initializing Servlet 'dispatcherServlet'
+2025-04-05 15:00:06 -Completed initialization in 4 ms
+2025-04-05 15:00:06 -HikariPool-1 - Starting...
+2025-04-05 15:00:06 -HikariPool-1 - Start completed.
+2025-04-05 15:00:06 -CHAT MSG FORM QUEUE ::: {"toId":"lld3","clientType":1,"messageBody":"测试离线消息发送","appId":10000,"messageId":"41024341-1e63-4996-a30d-d46d2a11b574","imei":"10000","fromId":"lld2","command":1103}
+2025-04-05 15:00:07 -msg ack,msgId=41024341-1e63-4996-a30d-d46d2a11b574,checkResult200
+2025-04-05 15:00:07 -Channel shutdown: channel error; protocol method: #method<channel.close>(reply-code=404, reply-text=NOT_FOUND - no exchange 'storeP2PMessage' in vhost '/', class-id=60, method-id=40)
+2025-04-05 15:00:08 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"41024341-1e63-4996-a30d-d46d2a11b574"},"ok":true},"imei":"10000","toId":"lld2"}
+2025-04-05 15:00:08 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414262191194113,"serverSend":true,"messageSequence":0,"fromId":"lld3"},"imei":"10000","toId":"lld2"}
+2025-04-05 15:00:31 -Waiting for workers to finish.
+2025-04-05 15:00:32 -Successfully waited for workers to finish.
+2025-04-05 15:00:32 -Waiting for workers to finish.
+2025-04-05 15:00:33 -Successfully waited for workers to finish.
+2025-04-05 15:00:33 -Shutdown ignored - container is not active already
+2025-04-05 15:00:33 -Shutdown ignored - container is not active already
+2025-04-05 15:00:33 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-05 15:00:38 -HikariPool-1 - Shutdown initiated...
+2025-04-05 15:00:38 -HikariPool-1 - Shutdown completed.
+2025-04-05 15:50:16 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 44608 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 15:50:16 -The following profiles are active: dev
+2025-04-05 15:50:17 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-05 15:50:17 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-05 15:50:17 -Finished Spring Data repository scanning in 16ms. Found 0 Redis repository interfaces.
+2025-04-05 15:50:17 -Tomcat initialized with port(s): 8000 (http)
+2025-04-05 15:50:17 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-05 15:50:17 -Starting service [Tomcat]
+2025-04-05 15:50:17 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-05 15:50:17 -Initializing Spring embedded WebApplicationContext
+2025-04-05 15:50:17 -Root WebApplicationContext: initialization completed in 1068 ms
+2025-04-05 15:50:19 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-05 15:50:19 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-05 15:50:19 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-05 15:50:19 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 15:50:19 -Created new connection: rabbitConnectionFactory#340a8894:0/SimpleConnection@61a2aeb7 [delegate=amqp://root@192.168.88.130:5672/, localPort= 58782]
+2025-04-05 15:50:19 -Started ServiceApplication in 3.274 seconds (JVM running for 3.871)
+2025-04-05 15:50:49 -Starting Application on LAPTOP-7HT4VH9K with PID 45368 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 15:50:49 -The following profiles are active: dev
+2025-04-05 15:50:50 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 15:50:50 -Created new connection: rabbitConnectionFactory#df4b72:0/SimpleConnection@30af7377 [delegate=amqp://root@192.168.88.130:5672/, localPort= 58936]
+2025-04-05 15:50:50 -Started Application in 1.457 seconds (JVM running for 1.946)
+2025-04-05 15:51:37 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-05 15:51:37 -Initializing Servlet 'dispatcherServlet'
+2025-04-05 15:51:37 -Completed initialization in 8 ms
+2025-04-05 15:51:38 -HikariPool-1 - Starting...
+2025-04-05 15:51:38 -HikariPool-1 - Start completed.
+2025-04-05 15:51:38 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"1230","appId":10000,"messageId":"a02745c0-aa43-4b73-8c5a-eae5ae4aa752","imei":"500","fromId":"lld2","command":1103}
+2025-04-05 15:51:39 -msg ack,msgId=a02745c0-aa43-4b73-8c5a-eae5ae4aa752,checkResult200
+2025-04-05 15:51:39 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743839499395,"delFlag":0,"messageBody":"1230","messageKey":414268677685249,"securityKey":""},"messageContent":{"appId":10000,"clientType":1,"fromId":"lld2","imei":"500","messageBody":"1230","messageId":"a02745c0-aa43-4b73-8c5a-eae5ae4aa752","messageKey":414268677685249,"messageSequence":1,"toId":"lld5"}}
+2025-04-05 15:51:39 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"a02745c0-aa43-4b73-8c5a-eae5ae4aa752","messageSequence":1},"ok":true},"imei":"500","toId":"lld2"}
+2025-04-05 15:51:39 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":414268677685249,"clientType":1,"messageBody":"1230","appId":10000,"imei":"500","messageId":"a02745c0-aa43-4b73-8c5a-eae5ae4aa752","messageSequence":1,"fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-05 15:51:39 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414268677685249,"serverSend":true,"messageSequence":1,"fromId":"lld5"},"imei":"500","toId":"lld2"}
+2025-04-05 15:51:39 -HikariPool-1 - Starting...
+2025-04-05 15:51:39 -HikariPool-1 - Start completed.
+2025-04-05 15:51:59 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"1231","appId":10000,"messageId":"b4c9728c-90c8-41eb-8a1e-9294f089178c","imei":"500","fromId":"lld2","command":1103}
+2025-04-05 15:51:59 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743839519603,"delFlag":0,"messageBody":"1231","messageKey":414268719628289,"securityKey":""},"messageContent":{"appId":10000,"clientType":1,"fromId":"lld2","imei":"500","messageBody":"1231","messageId":"b4c9728c-90c8-41eb-8a1e-9294f089178c","messageKey":414268719628289,"messageSequence":2,"toId":"lld5"}}
+2025-04-05 15:51:59 -msg ack,msgId=b4c9728c-90c8-41eb-8a1e-9294f089178c,checkResult200
+2025-04-05 15:51:59 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"b4c9728c-90c8-41eb-8a1e-9294f089178c","messageSequence":2},"ok":true},"imei":"500","toId":"lld2"}
+2025-04-05 15:51:59 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":414268719628289,"clientType":1,"messageBody":"1231","appId":10000,"imei":"500","messageId":"b4c9728c-90c8-41eb-8a1e-9294f089178c","messageSequence":2,"fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-05 15:51:59 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414268719628289,"serverSend":true,"messageSequence":2,"fromId":"lld5"},"imei":"500","toId":"lld2"}
+2025-04-05 15:52:05 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"1232","appId":10000,"messageId":"82a3b10d-1faa-4aa2-99aa-9e82c45cfcc6","imei":"500","fromId":"lld2","command":1103}
+2025-04-05 15:52:05 -msg ack,msgId=82a3b10d-1faa-4aa2-99aa-9e82c45cfcc6,checkResult200
+2025-04-05 15:52:05 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743839525217,"delFlag":0,"messageBody":"1232","messageKey":414268732211201,"securityKey":""},"messageContent":{"appId":10000,"clientType":1,"fromId":"lld2","imei":"500","messageBody":"1232","messageId":"82a3b10d-1faa-4aa2-99aa-9e82c45cfcc6","messageKey":414268732211201,"messageSequence":3,"toId":"lld5"}}
+2025-04-05 15:52:05 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"82a3b10d-1faa-4aa2-99aa-9e82c45cfcc6","messageSequence":3},"ok":true},"imei":"500","toId":"lld2"}
+2025-04-05 15:52:05 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":414268732211201,"clientType":1,"messageBody":"1232","appId":10000,"imei":"500","messageId":"82a3b10d-1faa-4aa2-99aa-9e82c45cfcc6","messageSequence":3,"fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-05 15:52:05 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414268732211201,"serverSend":true,"messageSequence":3,"fromId":"lld5"},"imei":"500","toId":"lld2"}
+2025-04-05 15:53:15 -Waiting for workers to finish.
+2025-04-05 15:53:15 -Waiting for workers to finish.
+2025-04-05 15:53:16 -Successfully waited for workers to finish.
+2025-04-05 15:53:16 -Waiting for workers to finish.
+2025-04-05 15:53:16 -Successfully waited for workers to finish.
+2025-04-05 15:53:16 -Successfully waited for workers to finish.
+2025-04-05 15:53:16 -Shutdown ignored - container is not active already
+2025-04-05 15:53:16 -Shutdown ignored - container is not active already
+2025-04-05 15:53:16 -Shutdown ignored - container is not active already
+2025-04-05 15:53:16 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-05 15:53:21 -HikariPool-1 - Shutdown initiated...
+2025-04-05 15:53:21 -HikariPool-1 - Shutdown completed.
+2025-04-05 15:53:21 -HikariPool-1 - Shutdown initiated...
+2025-04-05 15:53:21 -HikariPool-1 - Shutdown completed.
+2025-04-05 19:56:06 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 15176 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 19:56:06 -The following profiles are active: dev
+2025-04-05 19:56:06 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-05 19:56:06 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-05 19:56:06 -Finished Spring Data repository scanning in 12ms. Found 0 Redis repository interfaces.
+2025-04-05 19:56:07 -Tomcat initialized with port(s): 8000 (http)
+2025-04-05 19:56:07 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-05 19:56:07 -Starting service [Tomcat]
+2025-04-05 19:56:07 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-05 19:56:07 -Initializing Spring embedded WebApplicationContext
+2025-04-05 19:56:07 -Root WebApplicationContext: initialization completed in 1171 ms
+2025-04-05 19:56:08 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-05 19:56:09 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-05 19:56:09 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-05 19:56:09 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 19:56:09 -Created new connection: rabbitConnectionFactory#7e446d92:0/SimpleConnection@1980a3f [delegate=amqp://root@192.168.88.130:5672/, localPort= 51159]
+2025-04-05 19:56:09 -Started ServiceApplication in 3.776 seconds (JVM running for 4.347)
+2025-04-05 19:56:22 -Starting Application on LAPTOP-7HT4VH9K with PID 14760 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-05 19:56:22 -The following profiles are active: dev
+2025-04-05 19:56:24 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-05 19:56:24 -Created new connection: rabbitConnectionFactory#41c62850:0/SimpleConnection@34b9fc7d [delegate=amqp://root@192.168.88.130:5672/, localPort= 51298]
+2025-04-05 19:56:24 -Started Application in 1.636 seconds (JVM running for 2.206)
+2025-04-05 19:58:15 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-05 19:58:15 -Initializing Servlet 'dispatcherServlet'
+2025-04-05 19:58:15 -Completed initialization in 6 ms
+2025-04-05 19:58:15 -HikariPool-1 - Starting...
+2025-04-05 19:58:15 -HikariPool-1 - Start completed.
+2025-04-05 19:58:15 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"","appId":10000,"messageId":"f7a94698-9745-46f8-815a-8a7d7ecc3379","imei":"10000","fromId":"lld2","command":1103}
+2025-04-05 19:58:16 -msg ack,msgId=f7a94698-9745-46f8-815a-8a7d7ecc3379,checkResult200
+2025-04-05 19:58:16 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"f7a94698-9745-46f8-815a-8a7d7ecc3379","messageSequence":1},"ok":true},"imei":"10000","toId":"lld2"}
+2025-04-05 19:58:16 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743854296605,"delFlag":0,"messageBody":"","messageKey":414299709243393,"securityKey":""},"messageContent":{"appId":10000,"clientType":1,"fromId":"lld2","imei":"10000","messageBody":"","messageId":"f7a94698-9745-46f8-815a-8a7d7ecc3379","messageKey":414299709243393,"messageSequence":1,"toId":"lld5"}}
+2025-04-05 19:58:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":414299709243393,"clientType":1,"messageBody":"","appId":10000,"imei":"10000","messageId":"f7a94698-9745-46f8-815a-8a7d7ecc3379","messageSequence":1,"fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-05 19:58:16 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414299709243393,"serverSend":true,"messageSequence":1,"fromId":"lld5"},"imei":"10000","toId":"lld2"}
+2025-04-05 19:58:16 -HikariPool-1 - Starting...
+2025-04-05 19:58:16 -HikariPool-1 - Start completed.
+2025-04-05 20:00:20 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"lld","appId":10000,"messageId":"lld","imei":"10000","fromId":"lld2","command":1103}
+2025-04-05 20:00:20 -msg ack,msgId=lld,checkResult200
+2025-04-05 20:00:20 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"lld","messageSequence":2},"ok":true},"imei":"10000","toId":"lld2"}
+2025-04-05 20:00:20 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743854420014,"delFlag":0,"messageBody":"lld","messageKey":414299969290241,"securityKey":""},"messageContent":{"appId":10000,"clientType":1,"fromId":"lld2","imei":"10000","messageBody":"lld","messageId":"lld","messageKey":414299969290241,"messageSequence":2,"toId":"lld5"}}
+2025-04-05 20:00:20 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":414299969290241,"clientType":1,"messageBody":"lld","appId":10000,"imei":"10000","messageId":"lld","messageSequence":2,"fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-05 20:00:20 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","messageKey":414299969290241,"serverSend":true,"messageSequence":2,"fromId":"lld5"},"imei":"10000","toId":"lld2"}
+2025-04-05 20:01:19 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"lld","appId":10000,"messageId":"lld","imei":"10000","fromId":"lld2","command":1103}
+2025-04-05 20:01:19 -msg ack,msgId=lld,checkResult200
+2025-04-05 20:01:19 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"lld","messageSequence":0},"ok":true},"imei":"10000","toId":"lld2"}
+2025-04-05 20:01:19 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","clientType":1,"messageBody":"lld","appId":10000,"imei":"10000","messageId":"lld","messageSequence":0,"fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-05 20:01:19 -send message == {"appId":10000,"clientType":1,"command":1107,"data":{"toId":"lld2","serverSend":true,"messageSequence":0,"fromId":"lld5"},"imei":"10000","toId":"lld2"}
+2025-04-05 20:03:35 -Waiting for workers to finish.
+2025-04-05 20:03:35 -Successfully waited for workers to finish.
+2025-04-05 20:03:35 -Waiting for workers to finish.
+2025-04-05 20:03:35 -Waiting for workers to finish.
+2025-04-05 20:03:35 -Successfully waited for workers to finish.
+2025-04-05 20:03:35 -Shutdown ignored - container is not active already
+2025-04-05 20:03:35 -Successfully waited for workers to finish.
+2025-04-05 20:03:35 -Shutdown ignored - container is not active already
+2025-04-05 20:03:35 -Shutdown ignored - container is not active already
+2025-04-05 20:03:35 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-05 20:03:40 -HikariPool-1 - Shutdown initiated...
+2025-04-05 20:03:40 -HikariPool-1 - Shutdown completed.
+2025-04-05 20:03:40 -HikariPool-1 - Shutdown initiated...
+2025-04-05 20:03:40 -HikariPool-1 - Shutdown completed.

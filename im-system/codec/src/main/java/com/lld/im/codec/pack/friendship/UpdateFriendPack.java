@@ -16,5 +16,6 @@ public class UpdateFriendPack {
 
     private String remark;
 
+    // 消息的序列号
     private Long sequence;
 }

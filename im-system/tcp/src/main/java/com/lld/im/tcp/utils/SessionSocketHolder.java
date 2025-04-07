@@ -115,7 +115,7 @@ public class SessionSocketHolder {
         RedissonClient redissonClient = RedisManager.getRedissonClient();
         RMap<String, String> map = redissonClient.getMap(appId + Constants.RedisConstants.UserSessionConstants + userId);
         // 从Redis中获取此时的userSession对象
-        String sessionStr = map.get(clientType.toString());
+        String sessionStr = map.get(clientType.toString()+":"+imei);
         if(!StringUtils.isBlank(sessionStr)) {
             // 将获取到的数据转化为对象
             UserSession userSession = JSONObject.parseObject(sessionStr, UserSession.class);

@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.command.MessageCommand;
 import com.lld.im.common.model.message.MessageContent;
+import com.lld.im.common.model.message.MessageReadContent;
+import com.lld.im.common.model.message.MessageReceiveAckContent;
+import com.lld.im.service.message.service.MessageSyncService;
 import com.lld.im.service.message.service.P2PMessageService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
@@ -39,6 +42,10 @@ public class ChatOperateReceiver {
     P2PMessageService p2pMessageService;
 
 
+    @Autowired
+    MessageSyncService messageSyncService;
+
+
     // 在springboot里面使用消息队列Rabbitmq监听队列的消息的方法
     // 使用rabbitListener注解来注明我们监听的队列
     @RabbitListener(
@@ -60,15 +67,28 @@ public class ChatOperateReceiver {
             // 接下来解析我们的command进行不同的逻辑操作
             JSONObject jsonObject = JSON.parseObject(msg);
             Integer command = jsonObject.getInteger("command");
-            // 如果当前指令是单聊消息
+            // TODO 如果当前指令是单聊消息
             if(command.equals(MessageCommand.MSG_P2P.getCommand())) {
                 // 处理单聊消息处理逻辑
                 // 将传来的消息转化我我们的类来接受
                 MessageContent content = jsonObject.toJavaObject(MessageContent.class);
                 p2pMessageService.process(content);
-            }
-            channel.basicAck(deliveryTag,false);
 
+            // TODO 如果当前指令是消息接收方发送过来的receiveAck
+            } else if(command.equals(MessageCommand.MSG_RECEIVE_ACK.getCommand())) {
+                // 当服务端收到receiveAck时，说明此时消息已经成功发送给了消息的接收者，并且收到了消息接收者的receiveAck
+                // 将接收到的消息接收者发送的receiveAck转化为我们设置的类来接受其内容
+                MessageReceiveAckContent ackContent = jsonObject.toJavaObject(MessageReceiveAckContent.class);
+                messageSyncService.receiveMark(ackContent);
+
+            // TODO 如果当前指令是消息已读
+            } else if(command.equals(MessageCommand.MSG_READ.getCommand())){
+                MessageReadContent readContent = jsonObject.toJavaObject(MessageReadContent.class);
+                messageSyncService.readMark(readContent);
+
+            }
+
+            channel.basicAck(deliveryTag,false);
         } catch(Exception e) {
             logger.error("处理消息出现异常：{}", e.getMessage());
             logger.error("RMQ_CHAT_TRAN_ERROR", e);

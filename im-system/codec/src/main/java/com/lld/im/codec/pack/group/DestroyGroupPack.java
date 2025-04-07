@@ -11,6 +11,7 @@ public class DestroyGroupPack {
 
     private String groupId;
 
+    // 消息的序列号
     private Long sequence;
 
 }

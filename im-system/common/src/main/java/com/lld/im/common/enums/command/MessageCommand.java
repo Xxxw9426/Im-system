@@ -15,10 +15,10 @@ public enum MessageCommand implements Command {
     MSG_RECEIVE_ACK(1107),
 
     //发送消息已读   1106
-    MSG_READ(0x452),
+    MSG_READ(0x452),   // 这个指令由客户端向服务端发起
 
     //消息已读通知给同步端 1053
-    MSG_READ_NOTIFY(0x41D),
+    MSG_READ_NOTIFY(0x41D),     // 服务端收到消息已读后同步给其他在线端
 
     //消息已读回执，给原消息发送方 1054
     MSG_READ_RECEIPT(0x41E),

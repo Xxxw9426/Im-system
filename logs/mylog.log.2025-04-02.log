@@ -676,3 +676,629 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'im-core.im_message_body' doe
 2025-04-02 14:38:37 -Shutting down ExecutorService 'applicationTaskExecutor'
 2025-04-02 14:38:42 -HikariPool-1 - Shutdown initiated...
 2025-04-02 14:38:42 -HikariPool-1 - Shutdown completed.
+2025-04-02 19:54:14 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 9396 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 19:54:14 -The following profiles are active: dev
+2025-04-02 19:54:15 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 19:54:15 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 19:54:15 -Finished Spring Data repository scanning in 21ms. Found 0 Redis repository interfaces.
+2025-04-02 19:54:15 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 19:54:15 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 19:54:15 -Starting service [Tomcat]
+2025-04-02 19:54:15 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 19:54:15 -Initializing Spring embedded WebApplicationContext
+2025-04-02 19:54:15 -Root WebApplicationContext: initialization completed in 1269 ms
+2025-04-02 19:54:47 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 37252 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 19:54:47 -The following profiles are active: dev
+2025-04-02 19:54:48 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 19:54:48 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 19:54:48 -Finished Spring Data repository scanning in 12ms. Found 0 Redis repository interfaces.
+2025-04-02 19:54:48 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 19:54:48 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 19:54:48 -Starting service [Tomcat]
+2025-04-02 19:54:48 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 19:54:48 -Initializing Spring embedded WebApplicationContext
+2025-04-02 19:54:48 -Root WebApplicationContext: initialization completed in 940 ms
+2025-04-02 19:54:50 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-02 19:54:50 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-02 19:54:50 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-02 19:54:50 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 19:54:50 -Created new connection: rabbitConnectionFactory#445bb139:0/SimpleConnection@42507640 [delegate=amqp://root@192.168.88.130:5672/, localPort= 60834]
+2025-04-02 19:54:50 -Started ServiceApplication in 2.981 seconds (JVM running for 3.624)
+2025-04-02 19:55:50 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-02 19:55:50 -Initializing Servlet 'dispatcherServlet'
+2025-04-02 19:55:50 -Completed initialization in 4 ms
+2025-04-02 19:55:50 -HikariPool-1 - Starting...
+2025-04-02 19:55:50 -HikariPool-1 - Start completed.
+2025-04-02 19:55:50 -CHAT MSG FORM QUEUE ::: {"toId":"lld5","clientType":1,"messageBody":"123","appId":10000,"messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","imei":"123456","fromId":"lld2","command":1103}
+2025-04-02 19:55:50 -msg ack,msgId=5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c,checkResult200
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c"},"ok":true},"imei":"123456","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 19:55:51 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld5","messageKey":413755821260801,"clientType":1,"messageBody":"123","appId":10000,"imei":"123456","messageId":"5bcc9028-4b62-4ebe-9912-5f5bbc2caa8c","fromId":"lld2"},"imei":"400","toId":"lld5"}
+2025-04-02 19:57:05 -CHAT MSG FORM QUEUE ::: {"clientType":1,"appId":10000,"imei":"123456","fromId":"lld2","command":1107}
+2025-04-02 19:57:05 -CHAT MSG FORM QUEUE ::: {"conversationType":0,"clientType":1,"appId":10000,"imei":"123456","fromId":"lld2","command":1106}
+2025-04-02 19:59:59 -Waiting for workers to finish.
+2025-04-02 19:59:59 -Successfully waited for workers to finish.
+2025-04-02 19:59:59 -Waiting for workers to finish.
+2025-04-02 20:00:00 -Successfully waited for workers to finish.
+2025-04-02 20:00:01 -Shutdown ignored - container is not active already
+2025-04-02 20:00:01 -Shutdown ignored - container is not active already
+2025-04-02 20:00:01 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-02 20:00:05 -HikariPool-1 - Shutdown initiated...
+2025-04-02 20:00:05 -HikariPool-1 - Shutdown completed.
+2025-04-02 20:33:18 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 35764 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 20:33:18 -The following profiles are active: dev
+2025-04-02 20:33:18 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 20:33:18 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 20:33:18 -Finished Spring Data repository scanning in 12ms. Found 0 Redis repository interfaces.
+2025-04-02 20:33:19 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 20:33:19 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 20:33:19 -Starting service [Tomcat]
+2025-04-02 20:33:19 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 20:33:19 -Initializing Spring embedded WebApplicationContext
+2025-04-02 20:33:19 -Root WebApplicationContext: initialization completed in 914 ms
+2025-04-02 20:33:20 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-02 20:33:20 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-02 20:33:20 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-02 20:33:20 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 20:33:20 -Created new connection: rabbitConnectionFactory#2fcd7d3f:0/SimpleConnection@b791a81 [delegate=amqp://root@192.168.88.130:5672/, localPort= 63820]
+2025-04-02 20:33:20 -Started ServiceApplication in 2.885 seconds (JVM running for 3.413)
+2025-04-02 20:35:14 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-02 20:35:14 -Initializing Servlet 'dispatcherServlet'
+2025-04-02 20:35:14 -Completed initialization in 6 ms
+2025-04-02 20:35:14 -HikariPool-1 - Starting...
+2025-04-02 20:35:15 -HikariPool-1 - Start completed.
+2025-04-02 20:35:15 -CHAT MSG FORM QUEUE ::: {"toId":"lld2","clientType":3,"messageBody":"123123","appId":10000,"messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","imei":"123456789","fromId":"lld1","command":1103}
+2025-04-02 20:35:15 -msg ack,msgId=dd974480-0923-44bf-8e9b-f1814122dc95,checkResult200
+2025-04-02 20:35:15 -Channel shutdown: channel error; protocol method: #method<channel.close>(reply-code=404, reply-text=NOT_FOUND - no exchange 'storeP2PMessage' in vhost '/', class-id=60, method-id=40)
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":3,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"dd974480-0923-44bf-8e9b-f1814122dc95"},"ok":true},"imei":"123456789","toId":"lld1"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"10000","toId":"lld1"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"500","toId":"lld1"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"10000","toId":"lld2"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"123","toId":"lld2"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"10002","toId":"lld2"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"500","toId":"lld2"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"123456","toId":"lld2"}
+2025-04-02 20:35:16 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld2","messageKey":413760781025281,"clientType":3,"messageBody":"123123","appId":10000,"imei":"123456789","messageId":"dd974480-0923-44bf-8e9b-f1814122dc95","fromId":"lld1"},"imei":"123456","toId":"lld2"}
+2025-04-02 20:37:06 -Waiting for workers to finish.
+2025-04-02 20:37:06 -Successfully waited for workers to finish.
+2025-04-02 20:37:06 -Waiting for workers to finish.
+2025-04-02 20:37:07 -Successfully waited for workers to finish.
+2025-04-02 20:37:07 -Shutdown ignored - container is not active already
+2025-04-02 20:37:07 -Shutdown ignored - container is not active already
+2025-04-02 20:37:07 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-02 20:37:12 -HikariPool-1 - Shutdown initiated...
+2025-04-02 20:37:12 -HikariPool-1 - Shutdown completed.
+2025-04-02 21:53:57 -Starting Application on LAPTOP-7HT4VH9K with PID 25140 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 21:53:57 -The following profiles are active: dev
+2025-04-02 21:53:58 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 21:53:58 -Created new connection: rabbitConnectionFactory#5fa05212:0/SimpleConnection@5b3f3ba0 [delegate=amqp://root@192.168.88.130:5672/, localPort= 52664]
+2025-04-02 21:53:58 -Started Application in 1.802 seconds (JVM running for 2.345)
+2025-04-02 21:54:18 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 27860 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 21:54:18 -The following profiles are active: dev
+2025-04-02 21:54:18 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 21:54:18 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 21:54:18 -Finished Spring Data repository scanning in 13ms. Found 0 Redis repository interfaces.
+2025-04-02 21:54:19 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 21:54:19 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 21:54:19 -Starting service [Tomcat]
+2025-04-02 21:54:19 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 21:54:19 -Initializing Spring embedded WebApplicationContext
+2025-04-02 21:54:19 -Root WebApplicationContext: initialization completed in 1000 ms
+2025-04-02 21:54:20 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-02 21:54:20 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-02 21:54:20 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-02 21:54:20 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 21:54:20 -Created new connection: rabbitConnectionFactory#75181b50:0/SimpleConnection@75aea2ba [delegate=amqp://root@192.168.88.130:5672/, localPort= 52821]
+2025-04-02 21:54:21 -Started ServiceApplication in 3.249 seconds (JVM running for 3.805)
+2025-04-02 21:56:03 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-02 21:56:03 -Initializing Servlet 'dispatcherServlet'
+2025-04-02 21:56:03 -Completed initialization in 4 ms
+2025-04-02 21:56:03 -HikariPool-1 - Starting...
+2025-04-02 21:56:03 -HikariPool-1 - Start completed.
+2025-04-02 21:56:03 -CHAT MSG FORM QUEUE ::: {"toId":"lld1","clientType":5,"messageBody":"123123","appId":10000,"messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","imei":"10","fromId":"lld2","command":1103}
+2025-04-02 21:56:03 -msg ack,msgId=2ac71765-9b09-4a23-aaf3-0a9b2338e793,checkResult200
+2025-04-02 21:56:03 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743602163480,"delFlag":0,"messageBody":"123123","messageKey":413770948018177,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","messageKey":413770948018177,"toId":"lld1"}}
+2025-04-02 21:56:03 -HikariPool-1 - Starting...
+2025-04-02 21:56:03 -HikariPool-1 - Start completed.
+2025-04-02 21:56:03 -处理消息出现异常：
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+2025-04-02 21:56:03 -RMQ_CHAT_TRAN_ERROR
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)
+	at com.sun.proxy.$Proxy45.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:271)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:60)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at com.sun.proxy.$Proxy49.insert(Unknown Source)
+	at com.lld.message.service.StoreMessageService.doStoreP2PMessage(StoreMessageService.java:36)
+	at com.lld.message.mq.StoreP2PMessageReceiver.onChatMessage(StoreP2PMessageReceiver.java:70)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:171)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:120)
+	at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:53)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:220)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:148)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:133)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1591)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1510)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1498)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1489)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1433)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:970)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:916)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1600(SimpleMessageListenerContainer.java:83)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1291)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1197)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at com.sun.proxy.$Proxy72.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)
+	... 29 common frames omitted
+2025-04-02 21:56:03 -NACK_MSG:{"imMessageBody":{"appId":10000,"createTime":1743602163480,"delFlag":0,"messageBody":"123123","messageKey":413770948018177,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","messageKey":413770948018177,"toId":"lld1"}}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":5,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793"},"ok":true},"imei":"10","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"10000","toId":"lld1"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":3,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"123456789","toId":"lld1"}
+2025-04-02 21:56:04 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413770948018177,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"2ac71765-9b09-4a23-aaf3-0a9b2338e793","fromId":"lld2"},"imei":"500","toId":"lld1"}
+2025-04-02 22:01:19 -Waiting for workers to finish.
+2025-04-02 22:01:20 -Successfully waited for workers to finish.
+2025-04-02 22:01:20 -Shutdown ignored - container is not active already
+2025-04-02 22:01:25 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:01:25 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:01:29 -Starting Application on LAPTOP-7HT4VH9K with PID 40520 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:01:29 -The following profiles are active: dev
+2025-04-02 22:01:30 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:01:30 -Created new connection: rabbitConnectionFactory#4943defe:0/SimpleConnection@1869f114 [delegate=amqp://root@192.168.88.130:5672/, localPort= 53331]
+2025-04-02 22:01:30 -Started Application in 1.311 seconds (JVM running for 1.733)
+2025-04-02 22:01:53 -CHAT MSG FORM QUEUE ::: {"toId":"lld1","clientType":5,"messageBody":"123123","appId":10000,"messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","imei":"10","fromId":"lld2","command":1103}
+2025-04-02 22:01:53 -msg ack,msgId=614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5,checkResult200
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":5,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5"},"ok":true},"imei":"10","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"10000","toId":"lld1"}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":3,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"123456789","toId":"lld1"}
+2025-04-02 22:01:53 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743602513372,"delFlag":0,"messageBody":"123123","messageKey":413771682021377,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","messageKey":413771682021377,"toId":"lld1"}}
+2025-04-02 22:01:53 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771682021377,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","fromId":"lld2"},"imei":"500","toId":"lld1"}
+2025-04-02 22:01:53 -HikariPool-1 - Starting...
+2025-04-02 22:01:53 -HikariPool-1 - Start completed.
+2025-04-02 22:01:53 -处理消息出现异常：
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+2025-04-02 22:01:53 -RMQ_CHAT_TRAN_ERROR
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)
+	at com.sun.proxy.$Proxy45.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:271)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:60)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at com.sun.proxy.$Proxy49.insert(Unknown Source)
+	at com.lld.message.service.StoreMessageService.doStoreP2PMessage(StoreMessageService.java:36)
+	at com.lld.message.mq.StoreP2PMessageReceiver.onChatMessage(StoreP2PMessageReceiver.java:78)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:171)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:120)
+	at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:53)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:220)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:148)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:133)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1591)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1510)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1498)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1489)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1433)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:970)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:916)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1600(SimpleMessageListenerContainer.java:83)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1291)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1197)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at com.sun.proxy.$Proxy72.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)
+	... 29 common frames omitted
+2025-04-02 22:01:53 -NACK_MSG:{"imMessageBody":{"appId":10000,"createTime":1743602513372,"delFlag":0,"messageBody":"123123","messageKey":413771682021377,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"614ec2e9-ccb7-4c24-84cc-fc0e2cda44a5","messageKey":413771682021377,"toId":"lld1"}}
+2025-04-02 22:03:23 -Waiting for workers to finish.
+2025-04-02 22:03:23 -Successfully waited for workers to finish.
+2025-04-02 22:03:23 -Shutdown ignored - container is not active already
+2025-04-02 22:03:28 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:03:28 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:03:37 -Starting Application on LAPTOP-7HT4VH9K with PID 21520 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:03:37 -The following profiles are active: dev
+2025-04-02 22:03:38 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:03:38 -Created new connection: rabbitConnectionFactory#7e053511:0/SimpleConnection@4a1c0752 [delegate=amqp://root@192.168.88.130:5672/, localPort= 53460]
+2025-04-02 22:03:38 -Started Application in 1.385 seconds (JVM running for 1.855)
+2025-04-02 22:03:41 -CHAT MSG FORM QUEUE ::: {"toId":"lld1","clientType":5,"messageBody":"123123","appId":10000,"messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","imei":"10","fromId":"lld2","command":1103}
+2025-04-02 22:03:41 -msg ack,msgId=bd3fc96c-1de7-4ec0-97d2-f02febcff40a,checkResult200
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":5,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a"},"ok":true},"imei":"10","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"10000","toId":"lld1"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":3,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"123456789","toId":"lld1"}
+2025-04-02 22:03:41 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413771908513793,"clientType":5,"messageBody":"123123","appId":10000,"imei":"10","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","fromId":"lld2"},"imei":"500","toId":"lld1"}
+2025-04-02 22:03:41 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743602621138,"delFlag":0,"messageBody":"123123","messageKey":413771908513793,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","messageKey":413771908513793,"toId":"lld1"}}
+2025-04-02 22:04:59 -HikariPool-1 - Starting...
+2025-04-02 22:04:59 -HikariPool-1 - Start completed.
+2025-04-02 22:04:59 -处理消息出现异常：
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+2025-04-02 22:04:59 -RMQ_CHAT_TRAN_ERROR
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)
+	at com.sun.proxy.$Proxy45.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:271)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:60)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at com.sun.proxy.$Proxy49.insert(Unknown Source)
+	at com.lld.message.service.StoreMessageService.doStoreP2PMessage(StoreMessageService.java:36)
+	at com.lld.message.mq.StoreP2PMessageReceiver.onChatMessage(StoreP2PMessageReceiver.java:70)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:171)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:120)
+	at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:53)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:220)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:148)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:133)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1591)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1510)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1498)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1489)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1433)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:970)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:916)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1600(SimpleMessageListenerContainer.java:83)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1291)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1197)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at com.sun.proxy.$Proxy72.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)
+	... 29 common frames omitted
+2025-04-02 22:04:59 -NACK_MSG:{"imMessageBody":{"appId":10000,"createTime":1743602621138,"delFlag":0,"messageBody":"123123","messageKey":413771908513793,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123123","messageId":"bd3fc96c-1de7-4ec0-97d2-f02febcff40a","messageKey":413771908513793,"toId":"lld1"}}
+2025-04-02 22:04:59 -Waiting for workers to finish.
+2025-04-02 22:05:00 -Waiting for workers to finish.
+2025-04-02 22:05:00 -Successfully waited for workers to finish.
+2025-04-02 22:05:00 -Waiting for workers to finish.
+2025-04-02 22:05:00 -Successfully waited for workers to finish.
+2025-04-02 22:05:00 -Shutdown ignored - container is not active already
+2025-04-02 22:05:01 -Successfully waited for workers to finish.
+2025-04-02 22:05:01 -Shutdown ignored - container is not active already
+2025-04-02 22:05:01 -Shutdown ignored - container is not active already
+2025-04-02 22:05:01 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-02 22:05:05 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:05:05 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:05:06 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:05:06 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:13:09 -Starting Application on LAPTOP-7HT4VH9K with PID 25672 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:13:09 -The following profiles are active: dev
+2025-04-02 22:13:10 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:13:10 -Created new connection: rabbitConnectionFactory#2d83c5a5:0/SimpleConnection@5eeedb60 [delegate=amqp://root@192.168.88.130:5672/, localPort= 53878]
+2025-04-02 22:13:10 -Started Application in 1.315 seconds (JVM running for 1.731)
+2025-04-02 22:13:22 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 39856 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:13:22 -The following profiles are active: dev
+2025-04-02 22:13:22 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 22:13:22 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 22:13:23 -Finished Spring Data repository scanning in 10ms. Found 0 Redis repository interfaces.
+2025-04-02 22:13:23 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 22:13:23 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 22:13:23 -Starting service [Tomcat]
+2025-04-02 22:13:23 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 22:13:23 -Initializing Spring embedded WebApplicationContext
+2025-04-02 22:13:23 -Root WebApplicationContext: initialization completed in 757 ms
+2025-04-02 22:13:24 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-02 22:13:24 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-02 22:13:24 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-02 22:13:24 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:13:24 -Created new connection: rabbitConnectionFactory#55d58825:0/SimpleConnection@799f916e [delegate=amqp://root@192.168.88.130:5672/, localPort= 54020]
+2025-04-02 22:13:24 -Started ServiceApplication in 2.538 seconds (JVM running for 3.055)
+2025-04-02 22:13:53 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-02 22:13:53 -Initializing Servlet 'dispatcherServlet'
+2025-04-02 22:13:53 -Completed initialization in 6 ms
+2025-04-02 22:13:53 -HikariPool-1 - Starting...
+2025-04-02 22:13:54 -HikariPool-1 - Start completed.
+2025-04-02 22:13:54 -CHAT MSG FORM QUEUE ::: {"toId":"lld1","clientType":5,"messageBody":"123qawsed","appId":10000,"messageId":"bb81ac34-d075-4282-8418-e612fbd83874","imei":"10","fromId":"lld2","command":1103}
+2025-04-02 22:13:54 -msg ack,msgId=bb81ac34-d075-4282-8418-e612fbd83874,checkResult200
+2025-04-02 22:13:54 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743603234194,"delFlag":0,"messageBody":"123qawsed","messageKey":413773194067969,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123qawsed","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","messageKey":413773194067969,"toId":"lld1"}}
+2025-04-02 22:13:54 -HikariPool-1 - Starting...
+2025-04-02 22:13:54 -HikariPool-1 - Start completed.
+2025-04-02 22:13:54 -处理消息出现异常：
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+2025-04-02 22:13:54 -RMQ_CHAT_TRAN_ERROR
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+### The error may exist in com/lld/message/dao/mapper/ImMessageBodyMapper.java (best guess)
+### The error may involve com.lld.message.dao.mapper.ImMessageBodyMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO im_message_body    VALUES
+### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:88)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:440)
+	at com.sun.proxy.$Proxy45.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:271)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:60)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at com.sun.proxy.$Proxy49.insert(Unknown Source)
+	at com.lld.message.service.StoreMessageService.doStoreP2PMessage(StoreMessageService.java:36)
+	at com.lld.message.mq.StoreP2PMessageReceiver.onChatMessage(StoreP2PMessageReceiver.java:69)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:171)
+	at org.springframework.messaging.handler.invocation.InvocableHandlerMethod.invoke(InvocableHandlerMethod.java:120)
+	at org.springframework.amqp.rabbit.listener.adapter.HandlerAdapter.invoke(HandlerAdapter.java:53)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandler(MessagingMessageListenerAdapter.java:220)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.invokeHandlerAndProcessResult(MessagingMessageListenerAdapter.java:148)
+	at org.springframework.amqp.rabbit.listener.adapter.MessagingMessageListenerAdapter.onMessage(MessagingMessageListenerAdapter.java:133)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doInvokeListener(AbstractMessageListenerContainer.java:1591)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.actualInvokeListener(AbstractMessageListenerContainer.java:1510)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.invokeListener(AbstractMessageListenerContainer.java:1498)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.doExecuteListener(AbstractMessageListenerContainer.java:1489)
+	at org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer.executeListener(AbstractMessageListenerContainer.java:1433)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.doReceiveAndExecute(SimpleMessageListenerContainer.java:970)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.receiveAndExecute(SimpleMessageListenerContainer.java:916)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer.access$1600(SimpleMessageListenerContainer.java:83)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.mainLoop(SimpleMessageListenerContainer.java:1291)
+	at org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer$AsyncMessageProcessingConsumer.run(SimpleMessageListenerContainer.java:1197)
+	at java.lang.Thread.run(Thread.java:750)
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at com.sun.proxy.$Proxy72.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doUpdate(MybatisSimpleExecutor.java:56)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.update(MybatisCachingExecutor.java:85)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)
+	... 29 common frames omitted
+2025-04-02 22:13:54 -NACK_MSG:{"imMessageBody":{"appId":10000,"createTime":1743603234194,"delFlag":0,"messageBody":"123qawsed","messageKey":413773194067969,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123qawsed","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","messageKey":413773194067969,"toId":"lld1"}}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":5,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"bb81ac34-d075-4282-8418-e612fbd83874"},"ok":true},"imei":"10","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"10000","toId":"lld1"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":3,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"123456789","toId":"lld1"}
+2025-04-02 22:13:55 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773194067969,"clientType":5,"messageBody":"123qawsed","appId":10000,"imei":"10","messageId":"bb81ac34-d075-4282-8418-e612fbd83874","fromId":"lld2"},"imei":"500","toId":"lld1"}
+2025-04-02 22:14:36 -Waiting for workers to finish.
+2025-04-02 22:14:36 -Waiting for workers to finish.
+2025-04-02 22:14:36 -Successfully waited for workers to finish.
+2025-04-02 22:14:36 -Shutdown ignored - container is not active already
+2025-04-02 22:14:37 -Successfully waited for workers to finish.
+2025-04-02 22:14:37 -Waiting for workers to finish.
+2025-04-02 22:14:37 -Successfully waited for workers to finish.
+2025-04-02 22:14:37 -Shutdown ignored - container is not active already
+2025-04-02 22:14:37 -Shutdown ignored - container is not active already
+2025-04-02 22:14:37 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-02 22:14:41 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:14:41 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:14:42 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:14:42 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:16:00 -Starting Application on LAPTOP-7HT4VH9K with PID 36696 (D:\Java\ImSystem\im-system\message-store\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:16:00 -The following profiles are active: dev
+2025-04-02 22:16:01 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:16:01 -Created new connection: rabbitConnectionFactory#2d83c5a5:0/SimpleConnection@5eeedb60 [delegate=amqp://root@192.168.88.130:5672/, localPort= 54292]
+2025-04-02 22:16:01 -Started Application in 1.433 seconds (JVM running for 1.93)
+2025-04-02 22:16:12 -Starting ServiceApplication on LAPTOP-7HT4VH9K with PID 25280 (D:\Java\ImSystem\im-system\service\target\classes started by 33175 in D:\Java\ImSystem)
+2025-04-02 22:16:12 -The following profiles are active: dev
+2025-04-02 22:16:12 -Multiple Spring Data modules found, entering strict repository configuration mode!
+2025-04-02 22:16:12 -Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-02 22:16:12 -Finished Spring Data repository scanning in 10ms. Found 0 Redis repository interfaces.
+2025-04-02 22:16:13 -Tomcat initialized with port(s): 8000 (http)
+2025-04-02 22:16:13 -Initializing ProtocolHandler ["http-nio-8000"]
+2025-04-02 22:16:13 -Starting service [Tomcat]
+2025-04-02 22:16:13 -Starting Servlet engine: [Apache Tomcat/9.0.37]
+2025-04-02 22:16:13 -Initializing Spring embedded WebApplicationContext
+2025-04-02 22:16:13 -Root WebApplicationContext: initialization completed in 696 ms
+2025-04-02 22:16:14 -Initializing ExecutorService 'applicationTaskExecutor'
+2025-04-02 22:16:14 -Starting ProtocolHandler ["http-nio-8000"]
+2025-04-02 22:16:14 -Tomcat started on port(s): 8000 (http) with context path ''
+2025-04-02 22:16:14 -Attempting to connect to: [192.168.88.130:5672]
+2025-04-02 22:16:14 -Created new connection: rabbitConnectionFactory#51ec2856:0/SimpleConnection@40d52be7 [delegate=amqp://root@192.168.88.130:5672/, localPort= 54455]
+2025-04-02 22:16:14 -Started ServiceApplication in 2.473 seconds (JVM running for 2.99)
+2025-04-02 22:16:42 -Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-02 22:16:42 -Initializing Servlet 'dispatcherServlet'
+2025-04-02 22:16:42 -Completed initialization in 5 ms
+2025-04-02 22:16:42 -HikariPool-1 - Starting...
+2025-04-02 22:16:42 -HikariPool-1 - Start completed.
+2025-04-02 22:16:42 -CHAT MSG FORM QUEUE ::: {"toId":"lld1","clientType":5,"messageBody":"123qwer","appId":10000,"messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","imei":"10","fromId":"lld2","command":1103}
+2025-04-02 22:16:42 -msg ack,msgId=043b00fc-8c74-49cd-93f7-c56817fdbf15,checkResult200
+2025-04-02 22:16:42 -CHAT MSG FORM QUEUE ::: {"imMessageBody":{"appId":10000,"createTime":1743603402961,"delFlag":0,"messageBody":"123qwer","messageKey":413773546389505,"securityKey":""},"messageContent":{"appId":10000,"clientType":5,"fromId":"lld2","imei":"10","messageBody":"123qwer","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","messageKey":413773546389505,"toId":"lld1"}}
+2025-04-02 22:16:43 -HikariPool-1 - Starting...
+2025-04-02 22:16:43 -HikariPool-1 - Start completed.
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":5,"command":1046,"data":{"msg":"success","code":200,"data":{"messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15"},"ok":true},"imei":"10","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"10000","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"123","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"10002","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"500","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":2,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"123456","toId":"lld2"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"10000","toId":"lld1"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":3,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"123456789","toId":"lld1"}
+2025-04-02 22:16:43 -send message == {"appId":10000,"clientType":1,"command":1103,"data":{"toId":"lld1","messageKey":413773546389505,"clientType":5,"messageBody":"123qwer","appId":10000,"imei":"10","messageId":"043b00fc-8c74-49cd-93f7-c56817fdbf15","fromId":"lld2"},"imei":"500","toId":"lld1"}
+2025-04-02 22:17:10 -Waiting for workers to finish.
+2025-04-02 22:17:10 -Successfully waited for workers to finish.
+2025-04-02 22:17:10 -Waiting for workers to finish.
+2025-04-02 22:17:11 -Successfully waited for workers to finish.
+2025-04-02 22:17:11 -Waiting for workers to finish.
+2025-04-02 22:17:11 -Shutdown ignored - container is not active already
+2025-04-02 22:17:11 -Shutdown ignored - container is not active already
+2025-04-02 22:17:11 -Shutting down ExecutorService 'applicationTaskExecutor'
+2025-04-02 22:17:11 -Successfully waited for workers to finish.
+2025-04-02 22:17:11 -Shutdown ignored - container is not active already
+2025-04-02 22:17:16 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:17:16 -HikariPool-1 - Shutdown completed.
+2025-04-02 22:17:16 -HikariPool-1 - Shutdown initiated...
+2025-04-02 22:17:16 -HikariPool-1 - Shutdown completed.

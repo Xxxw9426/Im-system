@@ -45,6 +45,9 @@ public class BootstrapConfig {
 
         // 多端登录多端同步模式
         private Integer loginModel;
+
+        // 服务层的地址
+        private String logicUrl;
     }
 
 

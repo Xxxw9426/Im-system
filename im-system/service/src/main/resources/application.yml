@@ -75,6 +75,9 @@ appConfig:
   sendMessageBeforeCallback: true # 发送单聊消息之前
   sendGroupMessageAfterCallback: true # 发送群聊消息之后
   sendGroupMessageBeforeCallback: true # 发送群聊消息之前
+  deleteConversationSyncMode: 1        # 删除会话时的同步策略  1. 多端同步
+  offlineMessageCount: 1000        # 离线消息存储条数
+
 
 mqQueueName: 123
 

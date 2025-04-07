@@ -54,6 +54,17 @@ public class Constants {
          */
         public static final String UserLoginChannel = "signal/channel/LOGIN_USER_INNER_QUEUE";
 
+
+        /**
+         * 缓存客户端消息防重，格式： appId + :cacheMessage: + messageId
+         */
+        public static final String cacheMessage = "cacheMessage";
+
+        /**
+         * 存储离线消息时的key值的一部分
+         */
+        public static final String OfflineMessage = "offlineMessage";
+
     }
 
 
@@ -81,7 +92,7 @@ public class Constants {
         /** 关系链服务给IM服务投递的消息 */
         public static final String FriendShip2Im = "friendShip2Pipeline";
 
-
+        /** MQ异步持久化单聊消息  */
         public static final String StoreP2PMessage = "storeP2PMessage";
 
 
@@ -127,6 +138,15 @@ public class Constants {
         public static final String SendMessageAfter = "message.send.after";
 
         public static final String SendMessageBefore = "message.send.before";
+
+    }
+
+
+    public static class SeqConstants{
+
+        public static final String Message = "messageSeq";
+
+        public static final String GroupMessage = "groupMessageSeq";
 
     }
 

@@ -11,5 +11,6 @@ public class ReadAllFriendRequestPack {
 
     private String fromId;
 
+    // 消息的序列号
     private Long sequence;
 }

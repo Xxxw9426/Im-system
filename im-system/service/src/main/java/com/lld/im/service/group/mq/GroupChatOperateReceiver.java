@@ -2,10 +2,13 @@ package com.lld.im.service.group.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.command.GroupEventCommand;
 import com.lld.im.common.model.message.GroupChatMessageContent;
+import com.lld.im.common.model.message.MessageReadContent;
 import com.lld.im.service.group.service.GroupMessageService;
+import com.lld.im.service.message.service.MessageSyncService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,10 @@ public class GroupChatOperateReceiver {
     GroupMessageService groupMessageService;
 
 
+    @Autowired
+    MessageSyncService messageSyncService;
+
+
     // 在springboot里面使用消息队列Rabbitmq监听队列的消息的方法
     // 使用rabbitListener注解来注明我们监听的队列
     @RabbitListener(
@@ -59,14 +66,20 @@ public class GroupChatOperateReceiver {
             // 接下来解析我们的command进行不同的逻辑操作
             JSONObject jsonObject = JSON.parseObject(msg);
             Integer command = jsonObject.getInteger("command");
-            // 如果当前指令是群聊消息消息
+            // TODO 如果当前指令是群聊消息消息
             if(command.equals(GroupEventCommand.MSG_GROUP.getCommand())) {
                 // 处理群聊消息处理逻辑
                 GroupChatMessageContent content = jsonObject.toJavaObject(GroupChatMessageContent.class);
                 groupMessageService.process(content);
-            }
-            channel.basicAck(deliveryTag,false);
 
+            // TODO 如果当前消息是群聊已读消息
+            }else if (command.equals(GroupEventCommand.MSG_GROUP_READ.getCommand())) {
+                MessageReadContent messageRead = JSON.parseObject(msg, new TypeReference<MessageReadContent>() {
+                }.getType());
+                messageSyncService.groupReadMark(messageRead);
+            }
+
+            channel.basicAck(deliveryTag,false);
         } catch(Exception e) {
             logger.error("处理消息出现异常：{}", e.getMessage());
             logger.error("RMQ_CHAT_TRAN_ERROR", e);

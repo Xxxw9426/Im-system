@@ -1,18 +1,31 @@
 package com.lld.im.service.message.service;
 
 import com.lld.im.codec.pack.message.ChatMessageAck;
+import com.lld.im.codec.pack.message.MessageReceiveServerAckPack;
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.constant.Constants;
+import com.lld.im.common.enums.ConversationTypeEnum;
 import com.lld.im.common.enums.command.MessageCommand;
 import com.lld.im.common.model.ClientInfo;
 import com.lld.im.common.model.message.MessageContent;
+import com.lld.im.common.model.message.OfflineMessageContent;
 import com.lld.im.service.message.model.req.SendMessageReq;
 import com.lld.im.service.message.model.resp.SendMessageResp;
+import com.lld.im.service.seq.RedisSeq;
+import com.lld.im.service.utils.ConversationIdGenerate;
 import com.lld.im.service.utils.MessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author: 萱子王
@@ -38,33 +51,95 @@ public class P2PMessageService {
     MessageStoreService messageStoreService;
 
 
+    @Autowired
+    RedisSeq redisSeq;
+
+
+    private final ThreadPoolExecutor threadPoolExecutor;
+
+
+    {
+        AtomicInteger num = new AtomicInteger(0);
+        /***
+         * 这个方法的参数：
+         *   1. 核心线程数
+         *   2. 最大线程数
+         *   3. 线程存活时间
+         *   4. 时间单位
+         *   5. 队列列型
+         *   6. 线程工厂
+         */
+        threadPoolExecutor=new ThreadPoolExecutor(8, 8, 60, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(1000), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setDaemon(true);     // 指定该线程为我们的后台线程
+                thread.setName("message-process-thread-" + num.getAndIncrement());    // 给每一个线程设置一个别名
+                return thread;
+            }
+        });
+    }
+
+
     /***
      * 处理单聊消息逻辑的方法
      * @param messageContent    封装的在业务逻辑层接收传来的单聊消息的类
      */
     public void process(MessageContent messageContent) {
-        String fromId = messageContent.getFromId();
-        String toId = messageContent.getToId();
-        Integer appId = messageContent.getAppId();
-        // 首先进行前置校验
-        // 校验这个用户是否被禁言，是否被禁用
-        // 校验发送方和接收方是否是好友(不绝对，取决于业务系统的设计与需求)
-        ResponseVO responseVO = imServerPermissionCheck(fromId, toId, appId);
-        if(responseVO.isOk()) {
+
+        // 用messageId从缓存中获取消息
+        MessageContent cache = messageStoreService.getMessageFromMessageIdCache(messageContent.getAppId(), messageContent.getMessageId(),MessageContent.class);
+        // 如果缓存不为空，不需要持久化，直接消息分发即可
+        if(cache != null) {
+            threadPoolExecutor.execute(()->{
+                // 分发消息的主要流程
+                // 1. 回ack成功给消息发送者
+                ack(messageContent,ResponseVO.successResponse());
+                // 2. 发消息给消息发送者同步的在线端
+                syncToSender(cache,cache);
+                // 3. 发消息给消息接收者同步的在线端
+                List<ClientInfo> list = dispatchMessage(cache);
+                if(list.isEmpty()) {
+                    // 如果接收方不在线，则由服务端发送消息确认ack
+                    receiveAck(messageContent);
+                }
+            });
+            return;
+        }
+
+        // 将生成seq提取到外面来的目的是，不同服务对于seq的依赖程度不同，我们可以根据我们对seq的依赖程度来实现这部分逻辑，
+        // 可以给这段seq有关的代码加上try catch语句，根据我们项目中对seq的需要来完成逻辑。
+        // 在插入合法消息之前为这个消息生成一个seq
+        // key：appId + Seq + (from + to)
+        Long seq = redisSeq.doGetSeq(messageContent.getAppId()+":"+ Constants.SeqConstants.Message+":"+
+                ConversationIdGenerate.generateP2PId(messageContent.getFromId(),messageContent.getToId()));
+        // 设置到消息中
+        messageContent.setMessageSequence(seq);
+
+        // 校验成功，向线程池提交任务
+        threadPoolExecutor.execute(()->{
             // 数据持久化，向单聊消息表中插入单聊的消息
             messageStoreService.storeP2PMessage(messageContent);
+            // 向redis中插入离线消息
+            OfflineMessageContent offlineMessageContent = new OfflineMessageContent();
+            BeanUtils.copyProperties(messageContent,offlineMessageContent);
+            offlineMessageContent.setConversationType(ConversationTypeEnum.P2P.getCode());
+            messageStoreService.storeOfflineMessage(offlineMessageContent);
             // 分发消息的主要流程
             // 1. 回ack成功给消息发送者
-            ack(messageContent,responseVO);
+            ack(messageContent,ResponseVO.successResponse());
             // 2. 发消息给消息发送者同步的在线端
             syncToSender(messageContent,messageContent);
             // 3. 发消息给消息接收者同步的在线端
-            dispatchMessage(messageContent);
-        } else {
-            // 告诉客户端失败了
-            // 回ack失败
-            ack(messageContent,responseVO);
-        }
+            List<ClientInfo> list = dispatchMessage(messageContent);
+            // 将messageId存到缓存中
+            messageStoreService.setMessageFromMessageIdCache(messageContent.getAppId(),messageContent.getMessageId(),messageContent);
+            if(list.isEmpty()) {
+                // 如果接收方不在线，则由服务端发送消息确认ack
+                receiveAck(messageContent);
+            }
+        });
     }
 
 
@@ -75,7 +150,7 @@ public class P2PMessageService {
      * @param appId
      * @return
      */
-    private ResponseVO imServerPermissionCheck(String fromId, String toId, Integer appId){
+    public ResponseVO imServerPermissionCheck(String fromId, String toId, Integer appId){
         // 校验发送消息的用户是否被禁用或者禁言
         ResponseVO responseVO = checkSendMessageService.checkSenderForbidAndMute(fromId, appId);
         if(!responseVO.isOk()){
@@ -96,12 +171,31 @@ public class P2PMessageService {
 
         logger.info("msg ack,msgId={},checkResult{}",messageContent.getMessageId(),responseVO.getCode());
         ChatMessageAck chatMessageAck = new
-                ChatMessageAck(messageContent.getMessageId());
+                ChatMessageAck(messageContent.getMessageId(),messageContent.getMessageSequence());
         responseVO.setData(chatMessageAck);
         // 发ack消息
         messageProducer.sendToUser(messageContent.getFromId(), MessageCommand.MSG_ACK,
                 responseVO,messageContent
         );
+    }
+
+
+    /***
+     * 当消息接收方不在线时由服务端发起的消息确认的方法
+     * @param messageContent
+     */
+    public void receiveAck(MessageContent messageContent) {
+        MessageReceiveServerAckPack pack = new MessageReceiveServerAckPack();
+        pack.setFromId(messageContent.getToId());
+        pack.setToId(messageContent.getFromId());
+        pack.setMessageKey(messageContent.getMessageKey());
+        pack.setMessageSequence(messageContent.getMessageSequence());
+        pack.setServerSend(true);
+        // 调用发送给某个特定端的方法
+        // ack消息只需要发送发送消息的端，发送消息用户的其它端我们已经进行了转发。
+        messageProducer.sendToUser(messageContent.getFromId(),MessageCommand.MSG_RECEIVE_ACK,
+                pack,new ClientInfo(messageContent.getAppId(),messageContent.getClientType()
+                        ,messageContent.getImei()));
     }
 
 
@@ -119,11 +213,12 @@ public class P2PMessageService {
     /***
      * 发送给消息接收者的所有在线端
      * @param messageContent  封装的在业务逻辑层接收传来的单聊消息的类
-     * @return
+     * @return  将转发成功的用户集合返回
      */
-    private void dispatchMessage(MessageContent messageContent){
+    private List<ClientInfo> dispatchMessage(MessageContent messageContent){
         // 直接调用转发的方法
-        messageProducer.sendToUser(messageContent.getToId(),MessageCommand.MSG_P2P,messageContent,messageContent.getAppId());
+        List<ClientInfo> clientInfos = messageProducer.sendToUser(messageContent.getToId(), MessageCommand.MSG_P2P, messageContent, messageContent.getAppId());
+        return clientInfos;
     }
 
 

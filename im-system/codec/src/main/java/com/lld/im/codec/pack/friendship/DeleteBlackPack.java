@@ -13,5 +13,6 @@ public class DeleteBlackPack {
 
     private String toId;
 
+    // 消息的序列号
     private Long sequence;
 }

@@ -24,5 +24,6 @@ public class AddFriendPack {
      */
     private String addWording;
 
+    // 消息的序列号
     private Long sequence;
 }

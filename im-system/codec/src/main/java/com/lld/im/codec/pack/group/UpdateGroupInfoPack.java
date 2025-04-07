@@ -25,5 +25,5 @@ public class UpdateGroupInfoPack {
 
     private Integer maxMemberCount;//群成员上限
 
-    private Long sequence;
+    private Long sequence;   // 消息的序列号
 }

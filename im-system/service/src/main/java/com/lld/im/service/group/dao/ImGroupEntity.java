@@ -44,6 +44,7 @@ public class ImGroupEntity {
 
     private Integer status;//群状态 0正常 1解散
 
+    // 消息的序列号
     private Long sequence;
 
     private Long createTime;
