@@ -1,6 +1,7 @@
 package com.lld.im.service.group.controller;
 
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.model.SyncReq;
 import com.lld.im.service.group.model.req.*;
 import com.lld.im.service.group.service.GroupMessageService;
 import com.lld.im.service.group.service.ImGroupService;
@@ -158,5 +159,19 @@ public class ImGroupController {
         req.setAppId(appId);
         req.setOperator(operator);
         return ResponseVO.successResponse(groupMessageService.send(req));
+    }
+
+
+    /***
+     * 群组数据增量拉取
+     * @param req
+     * @param appId
+     * @param identifier
+     * @return
+     */
+    @RequestMapping("/syncJoinedGroup")
+    public ResponseVO syncJoinedGroup(@RequestBody @Validated SyncReq req, Integer appId, String identifier)  {
+        req.setAppId(appId);
+        return imGroupService.syncJoinedGroupList(req);
     }
 }

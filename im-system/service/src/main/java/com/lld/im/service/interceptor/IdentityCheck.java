@@ -2,11 +2,14 @@ package com.lld.im.service.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lld.im.common.BaseErrorCode;
+import com.lld.im.common.ResponseVO;
 import com.lld.im.common.config.AppConfig;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.GateWayErrorCode;
+import com.lld.im.common.enums.ImUserTypeEnum;
 import com.lld.im.common.exception.ApplicationExceptionEnum;
 import com.lld.im.common.utils.SigAPI;
+import com.lld.im.service.user.dao.ImUserDataEntity;
 import com.lld.im.service.user.service.ImUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,19 +59,28 @@ public class IdentityCheck {
             return BaseErrorCode.SUCCESS;
         }
 
+        //获取秘钥
+        String privateKey = appConfig.getPrivateKey();
+
+        //根据appid + 秘钥创建sigApi
+        SigAPI sigAPI = new SigAPI(Long.valueOf(appId), privateKey);
+
         // 调用SigAPI对象对userSign解密
-        JSONObject jsonObject = SigAPI.decodeUserSig(userSig);
+        JSONObject jsonObject = sigAPI.decodeUserSig(userSig);
+
         // 取出解密后的appId和操作人和过期时间做匹配，不通过则提示错误
         Long expireTime = 0L;     // 过期时间
         Long expireSec = 0L;      // 过期的秒数
         String decoderAppId = "";     // 解密后的appId
         String decoderIdentifier = "";     // 解密后的操作人
+        Long time = 0L;
 
         try{
             decoderAppId = jsonObject.getString("TLS.appId");
             decoderIdentifier = jsonObject.getString("TLS.identifier");
             String expireStr = jsonObject.get("TLS.expire").toString();
             String expireTimeStr = jsonObject.get("TLS.expireTime").toString();
+            time = Long.valueOf(expireTimeStr);
             expireSec = Long.valueOf(expireStr) / 1000;     // 过期的秒数
             expireTime = Long.valueOf(expireTimeStr) + expireSec;      // 过期时间
         }catch(Exception e){
@@ -94,13 +106,37 @@ public class IdentityCheck {
         }
 
         // 将userSig存入Redis中并设置过期时间  key:appId+"固定字符串"+userId+sign
-        String key = appId + ":" + Constants.RedisConstants.userSign + ":"
-                +identifier + userSig;
-        Long etime = expireTime - System.currentTimeMillis() / 1000;
-        stringRedisTemplate.opsForValue().set(
-                key,expireTime.toString(),etime, TimeUnit.SECONDS
-        );
+        // 判断从appServer传过来的userSig和我么生成的userSig是否一直
+        String genSig = sigAPI.genUserSig(identifier, expireSec,time,null);
+        if (genSig.toLowerCase().equals(userSig.toLowerCase())) {
+            String key = appId + ":" + Constants.RedisConstants.userSign + ":"
+                    + identifier + userSig;
+            Long etime = expireTime - System.currentTimeMillis() / 1000;
+            stringRedisTemplate.opsForValue().set(
+                    key, expireTime.toString(), etime, TimeUnit.SECONDS
+            );
+            // 校验本次请求是否是后台调用
+            this.setIsAdmin(identifier,Integer.valueOf(appId));
+            return BaseErrorCode.SUCCESS;
+        }
 
         return BaseErrorCode.SUCCESS;
+    }
+
+
+    /**
+     * 根据appid,identifier判断是否App管理员,并设置到RequestHolder
+     * @param identifier
+     * @param appId
+     * @return
+     */
+    public void setIsAdmin(String identifier, Integer appId) {
+        // 去DB或Redis中查找, 后面写
+        ResponseVO<ImUserDataEntity> singleUserInfo = imUserService.getSingleUserInfo(identifier, appId);
+        if(singleUserInfo.isOk()){
+            RequestHolder.set(singleUserInfo.getData().getUserType() == ImUserTypeEnum.APP_ADMIN.getCode());
+        }else{
+            RequestHolder.set(false);
+        }
     }
 }

@@ -6,6 +6,8 @@ import com.alibaba.fastjson.TypeReference;
 import com.lld.im.codec.pack.LoginPack;
 import com.lld.im.codec.pack.group.GroupMessagePack;
 import com.lld.im.codec.pack.message.ChatMessageAck;
+import com.lld.im.codec.pack.user.LoginAckPack;
+import com.lld.im.codec.pack.user.UserStatusChangeNotifyPack;
 import com.lld.im.codec.proto.Message;
 import com.lld.im.codec.proto.MessagePack;
 import com.lld.im.common.ResponseVO;
@@ -14,6 +16,7 @@ import com.lld.im.common.enums.command.MessageCommand;
 import com.lld.im.common.enums.command.SystemCommand;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.ImConnectStatusEnum;
+import com.lld.im.common.enums.command.UserEventCommand;
 import com.lld.im.common.model.UserClientDto;
 import com.lld.im.common.model.UserSession;
 import com.lld.im.common.model.message.CheckSendMessageReq;
@@ -53,7 +56,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
 
 
     private FeignMessageService feignMessageService;
-
 
     // 服务层的地址
     private String logicUrl;
@@ -133,7 +135,27 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Message> {
             RTopic topic = redissonClient.getTopic(Constants.RedisConstants.UserLoginChannel);
             topic.publish(JSONObject.toJSONString(dto));
 
-        // TODO 如果当前指令是登出
+            // 登录成功后，向service层发送消息通知用户在线状态发生变化
+            UserStatusChangeNotifyPack userStatusChangeNotifyPack = new UserStatusChangeNotifyPack();
+            userStatusChangeNotifyPack.setUserId(loginPack.getUserId());
+            userStatusChangeNotifyPack.setAppId(message.getMessageHeader().getAppId());
+            userStatusChangeNotifyPack.setStatus(ImConnectStatusEnum.ONLINE_STATUS.getCode());
+            // 发送到service的MQ
+            MqMessageProducer.sendMessage(userStatusChangeNotifyPack,message.getMessageHeader(),
+                    UserEventCommand.USER_ONLINE_STATUS_CHANGE.getCommand());
+
+            // 向客户端发送ack响应消息，告诉客户端它已经登录成功
+            MessagePack<LoginAckPack> loginSuccess=new MessagePack<>();
+            LoginAckPack loginAckPack = new LoginAckPack();
+            loginAckPack.setUserId(loginPack.getUserId());
+            loginSuccess.setCommand(SystemCommand.LOGINACK.getCommand());
+            loginSuccess.setClientType(message.getMessageHeader().getClientType());
+            loginSuccess.setData(loginAckPack);
+            loginSuccess.setImei(message.getMessageHeader().getImei());
+            loginSuccess.setAppId(message.getMessageHeader().getAppId());
+            ctx.channel().writeAndFlush(loginSuccess);
+
+            // TODO 如果当前指令是登出
         } else if(command== SystemCommand.LOGOUT.getCommand()) {
 
             SessionSocketHolder.removeUserSession((NioSocketChannel) ctx.channel());

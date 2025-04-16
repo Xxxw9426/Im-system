@@ -2,7 +2,10 @@ package com.lld.im.service.friendship.service;
 
 import com.lld.im.common.ResponseVO;
 import com.lld.im.common.model.RequestBase;
+import com.lld.im.common.model.SyncReq;
 import com.lld.im.service.friendship.model.req.*;
+
+import java.util.List;
 
 /**
  * @Author: 萱子王
@@ -120,4 +123,21 @@ public interface ImFriendShipService {
      * @return
      */
     public ResponseVO checkBlack(CheckFriendShipReq req);
+
+
+    /***
+     * 好友列表增量拉取接口
+     * @param req
+     * @return
+     */
+    public ResponseVO syncFriendshipList(SyncReq req);
+
+
+    /***
+     * 获取传入用户所有好友id
+     * @param userId
+     * @param appId
+     * @return
+     */
+    public List<String> getAllFriendId(String userId,Integer appId);
 }

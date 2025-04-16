@@ -6,10 +6,9 @@ import com.lld.im.common.route.RouteHandle;
 import com.lld.im.common.route.RouteInfo;
 import com.lld.im.common.route.algorithm.random.RandomHandle;
 import com.lld.im.common.utils.RouteInfoParseUtil;
-import com.lld.im.service.user.model.req.DeleteUserReq;
-import com.lld.im.service.user.model.req.ImportUserReq;
-import com.lld.im.service.user.model.req.LoginReq;
+import com.lld.im.service.user.model.req.*;
 import com.lld.im.service.user.service.ImUserService;
+import com.lld.im.service.user.service.ImUserStatusService;
 import com.lld.im.service.utils.ZKit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +34,9 @@ public class ImUserController {
 
     @Autowired
     RouteHandle routeHandle;
+
+    @Autowired
+    ImUserStatusService imUserStatusService;
 
     @Autowired
     ZKit zKit;
@@ -92,5 +94,82 @@ public class ImUserController {
             return ResponseVO.successResponse(ipPort);
         }
         return ResponseVO.errorResponse();
+    }
+
+
+    /***
+     * 获取用户sequence，判断用户是否需要拉取增量
+     * @param req
+     * @param appId
+     * @return
+     */
+    @RequestMapping("/getUserSequence")
+    public ResponseVO getUserSequence(@RequestBody @Validated GetUserSequenceReq req, Integer appId) {
+        req.setAppId(appId);
+        return imUserService.getUserSequence(req);
+    }
+
+
+    /***
+     * 订阅用户在线状态
+     * @param req
+     * @param appId
+     * @return
+     */
+    @RequestMapping("/subscribeUserOnlineStatus")
+    public ResponseVO subscribeUserOnlineStatus(@RequestBody @Validated SubscribeUserOnlineStatusReq req, Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        imUserStatusService.subscribeUserOnlineStatus(req);
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 用户自行设置在线状态的请求
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/setUserCustomerStatus")
+    public ResponseVO setUserCustomerStatus(@RequestBody @Validated
+                                            SetUserCustomerStatusReq req, Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        imUserStatusService.setUserCustomerStatus(req);
+        return ResponseVO.successResponse();
+    }
+
+
+    /***
+     *  拉取当前用户的所有好友的在线状态
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/queryFriendOnlineStatus")
+    public ResponseVO queryFriendOnlineStatus(@RequestBody @Validated
+                                              PullFriendOnlineStatusReq req, Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return ResponseVO.successResponse(imUserStatusService.queryFriendOnlineStatus(req));
+    }
+
+
+    /***
+     * 拉取传入列表中的用户的在线状态
+     * @param req
+     * @param appId
+     * @param operator
+     * @return
+     */
+    @RequestMapping("/queryUserOnlineStatus")
+    public ResponseVO queryUserOnlineStatus(@RequestBody @Validated
+                                            PullUserOnlineStatusReq req, Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return ResponseVO.successResponse(imUserStatusService.queryUserOnlineStatus(req));
     }
 }

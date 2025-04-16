@@ -1,8 +1,11 @@
 package com.lld.im.service.group.service;
 
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.model.SyncReq;
 import com.lld.im.service.group.dao.ImGroupEntity;
 import com.lld.im.service.group.model.req.*;
+
+import java.util.Collection;
 
 /**
  * @Author: 萱子王
@@ -84,4 +87,21 @@ public interface ImGroupService {
      * @return
      */
     public ResponseVO muteGroup(MuteGroupReq req);
+
+
+    /***
+     * 群组数据增量拉取
+     * @param req
+     * @return
+     */
+    public ResponseVO syncJoinedGroupList(SyncReq req);
+
+
+    /***
+     * 获取传入用户加入的所有群组中的最大seq值
+     * @param userId
+     * @param appId
+     * @return
+     */
+    public Long getUserGroupMaxSeq(String userId, Integer appId);
 }

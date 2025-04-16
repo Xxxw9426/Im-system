@@ -11,6 +11,7 @@ import com.lld.im.common.enums.UserErrorCode;
 import com.lld.im.common.enums.command.Command;
 import com.lld.im.common.enums.command.UserEventCommand;
 import com.lld.im.common.exception.ApplicationException;
+import com.lld.im.service.group.service.ImGroupService;
 import com.lld.im.service.user.dao.ImUserDataEntity;
 import com.lld.im.service.user.dao.mapper.ImUserDataMapper;
 import com.lld.im.service.user.model.req.*;
@@ -21,11 +22,13 @@ import com.lld.im.service.utils.CallbackService;
 import com.lld.im.service.utils.MessageProducer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 *@Author: 萱子王
@@ -49,6 +52,12 @@ public class ImUserServiceImpl implements ImUserService {
 
     @Autowired
     MessageProducer messageProducer;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    ImGroupService imGroupService;
 
 
     /***
@@ -271,4 +280,20 @@ public class ImUserServiceImpl implements ImUserService {
     public ResponseVO login(LoginReq req) {
         return ResponseVO.successResponse();
     }
+
+
+    /***
+     * 获取用户的所有sequence用来判断用户是否需要拉取增量
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO getUserSequence(GetUserSequenceReq req) {
+        // 获取我们Redis中记录的当前用户的会话和好友模块的seq
+        Map<Object, Object> map = stringRedisTemplate.opsForHash().entries(req.getAppId() + ":" + Constants.RedisConstants.SeqPrefix + ":" + req.getUserId());
+        Long groupSeq=imGroupService.getUserGroupMaxSeq(req.getUserId(),req.getAppId());
+        map.put(Constants.SeqConstants.Group,groupSeq);
+        return ResponseVO.successResponse(map);
+    }
+
 }

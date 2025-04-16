@@ -2,9 +2,11 @@ package com.lld.im.service.message.controller;
 
 import com.lld.im.common.ResponseVO;
 import com.lld.im.common.enums.command.MessageCommand;
+import com.lld.im.common.model.SyncReq;
 import com.lld.im.common.model.message.CheckSendMessageReq;
 import com.lld.im.service.group.service.GroupMessageService;
 import com.lld.im.service.message.model.req.SendMessageReq;
+import com.lld.im.service.message.service.MessageSyncService;
 import com.lld.im.service.message.service.P2PMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +30,10 @@ public class MessageController {
 
     @Autowired
     GroupMessageService groupMessageService;
+
+
+    @Autowired
+    MessageSyncService messageSyncService;
 
 
     /***
@@ -55,5 +61,18 @@ public class MessageController {
         } else {
             return groupMessageService.imServerPermissionCheck(req.getFromId(),req.getToId(),req.getAppId());
         }
+    }
+
+
+    /***
+     * 用户上线后主动拉取离线消息的接口
+     * @param req
+     * @param appId
+     * @return
+     */
+    @RequestMapping("/syncOfflineMessage")
+    public ResponseVO syncOfflineMessage(@RequestBody @Validated SyncReq req, Integer appId)  {
+        req.setAppId(appId);
+        return messageSyncService.syncOfflineMessage(req);
     }
 }

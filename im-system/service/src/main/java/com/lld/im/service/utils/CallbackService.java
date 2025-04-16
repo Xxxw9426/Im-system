@@ -28,6 +28,9 @@ public class CallbackService {
     @Autowired
     AppConfig appConfig;
 
+    @Autowired
+    ShareThreadPool shareThreadPool;
+
 
     /***
      *  之后的回调，即我们处理完业务方法后通过之后回调告诉我们的业务系统我们的操作，不需要返回值
@@ -36,19 +39,22 @@ public class CallbackService {
      * @param jsonBody
      */
     public void callback(Integer appId,String callbackCommand,String jsonBody) {
-        /***
-         *  参数说明：
-         *  1. http请求要发送到的地址
-         *  2. 返回值的类型
-         *  3. 发送请求所需参数
-         *  4. 发送请求的请求体
-         *  5. 使用的字符集，不指定时默认是UTF-8
-         */
-        try {
-            httpRequestUtils.doPost(appConfig.getCallbackUrl(),Object.class,builderUrlParams(appId,callbackCommand),jsonBody,null);
-        } catch (Exception e) {
-            logger.error("callback 回调{} : {}出现异常 ： {} ",callbackCommand , appId, e.getMessage());
-        }
+        shareThreadPool.submit(() -> {
+            try {
+                /***
+                 *  参数说明：
+                 *  1. http请求要发送到的地址
+                 *  2. 返回值的类型
+                 *  3. 发送请求所需参数
+                 *  4. 发送请求的请求体
+                 *  5. 使用的字符集，不指定时默认是UTF-8
+                 */
+                httpRequestUtils.doPost(appConfig.getCallbackUrl(),Object.class,builderUrlParams(appId,callbackCommand),
+                        jsonBody,null);
+            }catch (Exception e){
+                logger.error("callback 回调{} : {}出现异常 ： {} ",callbackCommand , appId, e.getMessage());
+            }
+        });
     }
 
 
@@ -63,7 +69,7 @@ public class CallbackService {
     public ResponseVO beforeCallback(Integer appId,String callbackCommand,String jsonBody) {
 
         try {
-            ResponseVO responseVO = httpRequestUtils.doPost("", ResponseVO.class, builderUrlParams(appId, callbackCommand),
+            ResponseVO responseVO = httpRequestUtils.doPost(appConfig.getCallbackUrl(), ResponseVO.class, builderUrlParams(appId, callbackCommand),
                     jsonBody, null);
             return responseVO;
         } catch (Exception e) {

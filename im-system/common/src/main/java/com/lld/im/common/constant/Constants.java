@@ -65,6 +65,23 @@ public class Constants {
          */
         public static final String OfflineMessage = "offlineMessage";
 
+        /**
+         * 作为存入缓存的seq的key的一部分
+         */
+        public static final String SeqPrefix="seq";
+
+
+        /**
+         * 用户订阅列表，格式 ：appId + :subscribe: + userId。Hash结构，filed为订阅自己的人
+         */
+        public static final String subscribe = "subscribe";
+
+
+        /**
+         * 用户自定义在线状态，格式 ：appId + :userCustomerStatus: + userId。set，value为用户id
+         */
+        public static final String userCustomerStatus = "userCustomerStatus";
+
     }
 
 
@@ -142,11 +159,25 @@ public class Constants {
     }
 
 
+    // 序列号常量类
     public static class SeqConstants{
 
         public static final String Message = "messageSeq";
 
         public static final String GroupMessage = "groupMessageSeq";
+
+        public static final String Friendship = "friendshipSeq";
+
+//        public static final String FriendshipBlack = "friendshipBlackSeq";
+
+        public static final String FriendshipRequest = "friendshipRequestSeq";
+
+        public static final String FriendshipGroup = "friendshipGrouptSeq";
+
+        public static final String Group = "groupSeq";
+
+        public static final String Conversation = "conversationSeq";
+
 
     }
 

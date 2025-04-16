@@ -146,4 +146,13 @@ public interface ImGroupMemberService {
      * @return
      */
     public List<GroupMemberDto> getGroupManager(String groupId, Integer appId);
+
+
+    /***
+     * 根据传入的群成员id查找该群成员加入的所有群组
+     * @param operator
+     * @param appId
+     * @return
+     */
+    public ResponseVO<Collection<String>> syncMemberJoinedGroup(String operator, Integer appId);
 }

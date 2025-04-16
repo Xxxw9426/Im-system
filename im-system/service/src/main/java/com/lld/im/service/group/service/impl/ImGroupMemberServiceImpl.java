@@ -153,7 +153,6 @@ public class ImGroupMemberServiceImpl implements ImGroupMemberService {
             memberDto.setGroupId(groupId);
             memberDto.setAppId(appId);
             memberDto.setJoinTime(now);
-            memberDto.setRole(GroupMemberRoleEnum.ORDINARY.getCode());
             int insert = imGroupMemberMapper.insert(memberDto);
             if(insert==1) {
                 return ResponseVO.successResponse();
@@ -749,5 +748,17 @@ public class ImGroupMemberServiceImpl implements ImGroupMemberService {
     @Override
     public List<GroupMemberDto> getGroupManager(String groupId, Integer appId) {
         return imGroupMemberMapper.getGroupManager(groupId, appId);
+    }
+
+
+    /***
+     * 根据传入的群成员id查找该群成员加入的所有群组
+     * @param operator
+     * @param appId
+     * @return
+     */
+    @Override
+    public ResponseVO<Collection<String>> syncMemberJoinedGroup(String operator, Integer appId) {
+        return ResponseVO.successResponse(imGroupMemberMapper.syncJoinedGroupId(appId,operator,GroupMemberRoleEnum.LEAVE.getCode()));
     }
 }

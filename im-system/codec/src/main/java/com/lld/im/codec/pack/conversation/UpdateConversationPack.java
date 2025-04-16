@@ -18,4 +18,6 @@ public class UpdateConversationPack {
     private Integer isTop;                  // 是否置顶
 
     private Integer conversationType;        // 会话种类
+
+    private Long sequence;                 // 序列号
 }

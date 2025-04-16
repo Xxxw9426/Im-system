@@ -17,14 +17,19 @@ import com.lld.im.common.enums.GroupTypeEnum;
 import com.lld.im.common.enums.command.GroupEventCommand;
 import com.lld.im.common.exception.ApplicationException;
 import com.lld.im.common.model.ClientInfo;
+import com.lld.im.common.model.SyncReq;
+import com.lld.im.common.model.SyncResp;
+import com.lld.im.service.conversation.dao.ImConversationSetEntity;
 import com.lld.im.service.group.dao.ImGroupEntity;
 import com.lld.im.service.group.dao.mapper.ImGroupMapper;
 import com.lld.im.service.group.model.callback.DestroyGroupCallbackDto;
 import com.lld.im.service.group.model.req.*;
 import com.lld.im.service.group.model.resp.GetGroupResp;
 import com.lld.im.service.group.model.resp.GetRoleInGroupResp;
+import com.lld.im.service.group.service.GroupMessageService;
 import com.lld.im.service.group.service.ImGroupMemberService;
 import com.lld.im.service.group.service.ImGroupService;
+import com.lld.im.service.seq.RedisSeq;
 import com.lld.im.service.utils.CallbackService;
 import com.lld.im.service.utils.GroupMessageProducer;
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +37,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -63,6 +69,12 @@ public class ImGroupServiceImpl implements ImGroupService {
 
     @Autowired
     GroupMessageProducer groupMessageProducer;
+
+
+    @Autowired
+    RedisSeq redisSeq;
+    @Autowired
+    private GroupMessageService groupMessageService;
 
     /***
      * 导入群组(1个)
@@ -165,8 +177,10 @@ public class ImGroupServiceImpl implements ImGroupService {
         }
 
         // 向数据库中插入要添加的群聊的信息
+        Long seq=redisSeq.doGetSeq(req.getAppId()+":"+Constants.SeqConstants.Group);
         ImGroupEntity imGroupEntity = new ImGroupEntity();
         imGroupEntity.setCreateTime(System.currentTimeMillis());
+        imGroupEntity.setSequence(seq);
         imGroupEntity.setStatus(GroupStatusEnum.NORMAL.getCode());
         BeanUtils.copyProperties(req, imGroupEntity);
         int insert = imGroupMapper.insert(imGroupEntity);
@@ -191,6 +205,7 @@ public class ImGroupServiceImpl implements ImGroupService {
         // 创建群组成功后发送tcp通知
         CreateGroupPack pack=new CreateGroupPack();
         BeanUtils.copyProperties(imGroupEntity,pack);
+        pack.setSequence(seq);
         groupMessageProducer.producer(req.getOperator(), GroupEventCommand.CREATED_GROUP, pack
                 , new ClientInfo(req.getAppId(), req.getClientType(), req.getImei()));
 
@@ -226,14 +241,17 @@ public class ImGroupServiceImpl implements ImGroupService {
             int role=roleData.getRole();
             boolean isManager=role== GroupMemberRoleEnum.MANAGER.getCode();
             boolean isOwner=role==GroupMemberRoleEnum.OWNER.getCode();
-            // 判断当前群聊的类型:如果当前群聊是公开群的话只允许群主修改群聊信息，如果是私有群则任何人都可以修改资料
-            if((!isManager||!isOwner) && GroupTypeEnum.PUBLIC.getCode() == group.getData().getGroupType()) {
+            isManager=isManager||isOwner;
+            // 判断当前群聊的类型:如果当前群聊是公开群的话只允许群主或管理员修改群聊信息，如果是私有群则任何人都可以修改资料
+            if(!isManager && GroupTypeEnum.PUBLIC.getCode() == group.getData().getGroupType()) {
                 throw new ApplicationException(GroupErrorCode.THIS_OPERATE_NEED_MANAGER_ROLE);
             }
          }
         // 更新的内容
+        Long seq=redisSeq.doGetSeq(req.getAppId()+":"+Constants.SeqConstants.Group);
         ImGroupEntity entity = new ImGroupEntity();
         BeanUtils.copyProperties(req,entity);
+        entity.setSequence(seq);
         // 更新的条件
         QueryWrapper<ImGroupEntity> query=new QueryWrapper<>();
         query.eq("app_id", req.getAppId());
@@ -252,6 +270,7 @@ public class ImGroupServiceImpl implements ImGroupService {
         // 更新群组成功后发送tcp通知
         UpdateGroupInfoPack pack=new UpdateGroupInfoPack();
         BeanUtils.copyProperties(req,pack);
+        pack.setSequence(seq);
         groupMessageProducer.producer(req.getOperator(), GroupEventCommand.UPDATED_GROUP,
                 pack, new ClientInfo(req.getAppId(), req.getClientType(), req.getImei()));
 
@@ -323,6 +342,7 @@ public class ImGroupServiceImpl implements ImGroupService {
     public ResponseVO destroyGroup(DestroyGroupReq req) {
         // 默认非APP管理员操作
         boolean isAdmin=false;
+        Long seq=0L;
         // 判断当前群组是否存在
         QueryWrapper<ImGroupEntity> groupQuery=new QueryWrapper<>();
         groupQuery.eq("app_id", req.getAppId());
@@ -351,8 +371,10 @@ public class ImGroupServiceImpl implements ImGroupService {
                 throw new ApplicationException(GroupErrorCode.THIS_OPERATE_NEED_OWNER_ROLE);
             }
             // 前置校验结束，更新数据库中群组的删除字段状态
+            seq=redisSeq.doGetSeq(req.getAppId()+":"+Constants.SeqConstants.Group);
             ImGroupEntity update=new ImGroupEntity();
             update.setStatus(GroupStatusEnum.DESTROY.getCode());
+            update.setSequence(seq);
             int update1 = imGroupMapper.update(update, groupQuery);
             if(update1!=1) {
                 throw new ApplicationException(GroupErrorCode.UPDATE_GROUP_BASE_INFO_ERROR);
@@ -370,6 +392,7 @@ public class ImGroupServiceImpl implements ImGroupService {
         // 更新群组成功后发送tcp通知
         DestroyGroupPack pack=new DestroyGroupPack();
         pack.setGroupId(req.getGroupId());
+        pack.setSequence(seq);
         groupMessageProducer.producer(req.getOperator(),
                 GroupEventCommand.DESTROY_GROUP, pack, new ClientInfo(req.getAppId(), req.getClientType(), req.getImei()));
 
@@ -412,8 +435,10 @@ public class ImGroupServiceImpl implements ImGroupService {
         }
         // 执行转让操作
         // 这里是更新group表中的群主信息
+        Long seq=redisSeq.doGetSeq(req.getAppId()+":"+Constants.SeqConstants.Group);
         ImGroupEntity updateGroup = new ImGroupEntity();
         updateGroup.setOwnerId(req.getOwnerId());
+        updateGroup.setSequence(seq);
         UpdateWrapper<ImGroupEntity> updateGroupWrapper = new UpdateWrapper<>();
         updateGroupWrapper.eq("app_id", req.getAppId());
         updateGroupWrapper.eq("group_id", req.getGroupId());
@@ -468,5 +493,67 @@ public class ImGroupServiceImpl implements ImGroupService {
         imGroupMapper.update(update,wrapper);
 
         return ResponseVO.successResponse();
+    }
+
+
+    /***
+     * 群组数据增量拉取
+     * @param req
+     * @return
+     */
+    @Override
+    public ResponseVO syncJoinedGroupList(SyncReq req) {
+        // 首先设置每次最大拉取数量
+        if(req.getMaxLimit()>100) {
+            req.setMaxLimit(100);
+        }
+        // 返回对象
+        SyncResp<ImGroupEntity> resp=new SyncResp<>();
+        // 查找当前用户加入的所有群组
+        ResponseVO<Collection<String>> allGroupResp = imGroupMemberService.syncMemberJoinedGroup(req.getOperator(), req.getAppId());
+        if(allGroupResp.isOk()) {
+            Collection<String> allGroup = allGroupResp.getData();
+            // 查询条件：seq > #{seq}  limit #{limit}
+            QueryWrapper<ImGroupEntity> query=new QueryWrapper<>();
+            query.eq("app_id",req.getAppId());
+            query.in("group_id",allGroup);
+            query.gt("sequence",req.getLastSequence());
+            query.last("limit "+req.getMaxLimit());
+            query.orderByAsc("sequence");       // 根据friendSequence排序
+            List<ImGroupEntity> list = imGroupMapper.selectList(query);
+
+            if(!CollectionUtils.isEmpty(list)) {
+                // 获取我们查询到的最后一个元素
+                ImGroupEntity maxSeqEntity = list.get(list.size() - 1);
+                resp.setDataList(list);
+                // 获取当前用户的最大seq
+                resp.setMaxSequence(maxSeqEntity.getSequence());
+                Long maxSeq = imGroupMapper.getGroupMaxSeq(allGroup,req.getAppId());
+                resp.setCompleted(maxSeqEntity.getSequence() >= maxSeq);
+                return ResponseVO.successResponse(resp);
+
+            }
+        }
+        resp.setCompleted(true);
+        return ResponseVO.successResponse(resp);
+    }
+
+
+    /***
+     * 获取传入用户加入的所有群组中的最大seq值
+     * @param userId
+     * @param appId
+     * @return
+     */
+    @Override
+    public Long getUserGroupMaxSeq(String userId, Integer appId) {
+        // 首先获取当前用户加入的所有群聊id集合
+        ResponseVO<Collection<String>> allGroupResp = imGroupMemberService.syncMemberJoinedGroup(userId, appId);
+        if(!allGroupResp.isOk()) {
+            new ApplicationException(500,"");
+        }
+        // 获取当前用户加入的所有群组中的最大seq值
+        Long maxSeq = imGroupMapper.getGroupMaxSeq(allGroupResp.getData(),appId);
+        return maxSeq;
     }
 }

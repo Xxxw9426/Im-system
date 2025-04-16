@@ -1,10 +1,14 @@
 package com.lld.im.tcp.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.lld.im.codec.pack.user.UserStatusChangeNotifyPack;
+import com.lld.im.codec.proto.MessageHeader;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.ImConnectStatusEnum;
+import com.lld.im.common.enums.command.UserEventCommand;
 import com.lld.im.common.model.UserClientDto;
 import com.lld.im.common.model.UserSession;
+import com.lld.im.tcp.publish.MqMessageProducer;
 import com.lld.im.tcp.redis.RedisManager;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
@@ -92,6 +96,20 @@ public class SessionSocketHolder {
         RMap<String, String> map = redissonClient.getMap(appId + Constants.RedisConstants.UserSessionConstants + userId);
         // 删除Redis中用户Session
         map.remove(clientType+":"+imei);
+
+        MessageHeader messageHeader = new MessageHeader();
+        messageHeader.setAppId(appId);
+        messageHeader.setClientType(clientType);
+        messageHeader.setImei(imei);
+        // 登录退出登录后，向service层发送消息通知用户在线状态发生变化
+        UserStatusChangeNotifyPack userStatusChangeNotifyPack = new UserStatusChangeNotifyPack();
+        userStatusChangeNotifyPack.setUserId(userId);
+        userStatusChangeNotifyPack.setAppId(appId);
+        userStatusChangeNotifyPack.setStatus(ImConnectStatusEnum.OFFLINE_STATUS.getCode());
+        // 发送到service的MQ
+        MqMessageProducer.sendMessage(userStatusChangeNotifyPack,messageHeader,
+                UserEventCommand.USER_ONLINE_STATUS_CHANGE.getCommand());
+
         // 关闭Channel
         channel.close();
 
@@ -124,6 +142,22 @@ public class SessionSocketHolder {
             // 重新写入Redis
             map.put(clientType.toString()+":"+imei, JSONObject.toJSONString(userSession));
         }
+
+
+        MessageHeader messageHeader = new MessageHeader();
+        messageHeader.setAppId(appId);
+        messageHeader.setClientType(clientType);
+        messageHeader.setImei(imei);
+        // 登录离线后，向service层发送消息通知用户在线状态发生变化
+        UserStatusChangeNotifyPack userStatusChangeNotifyPack = new UserStatusChangeNotifyPack();
+        userStatusChangeNotifyPack.setUserId(userId);
+        userStatusChangeNotifyPack.setAppId(appId);
+        userStatusChangeNotifyPack.setStatus(ImConnectStatusEnum.OFFLINE_STATUS.getCode());
+        // 发送到service的MQ
+        MqMessageProducer.sendMessage(userStatusChangeNotifyPack,messageHeader,
+                UserEventCommand.USER_ONLINE_STATUS_CHANGE.getCommand());
+
+
         // 关闭channel
         channel.close();
     }

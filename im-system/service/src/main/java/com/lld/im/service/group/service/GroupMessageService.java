@@ -107,21 +107,24 @@ public class GroupMessageService {
         threadPoolExecutor.execute(()->{
             // 将数据持久化到数据库
             messageStoreService.storeGroupMessage(groupContent);
-            // 插入离线群聊消息
-            OfflineMessageContent offlineMessageContent = new OfflineMessageContent();
-            BeanUtils.copyProperties(groupContent, offlineMessageContent);
-            offlineMessageContent.setToId(groupContent.getGroupId());
-            List<String> groupMemberIds = imGroupMemberService.getGroupMemberId(groupContent.getGroupId(),
-                    groupContent.getAppId());
-            groupContent.setMemberId(groupMemberIds);
-            messageStoreService.storeGroupOfflineMessage(offlineMessageContent,groupMemberIds);
             // 分发消息的主要流程
             // 1. 回ack成功给消息发送者
             ack(groupContent,ResponseVO.successResponse());
             // 2. 发消息给消息发送者同步的在线端
             syncToSender(groupContent,groupContent);
             // 3. 发消息给所有群成员同步的在线端
-            dispatchMessage(groupContent);
+            boolean b = dispatchMessage(groupContent);
+            // b是false说明当前群成员有未读消息的
+            if(!b) {
+                // 插入离线群聊消息
+                OfflineMessageContent offlineMessageContent = new OfflineMessageContent();
+                BeanUtils.copyProperties(groupContent, offlineMessageContent);
+                offlineMessageContent.setToId(groupContent.getGroupId());
+                List<String> groupMemberIds = imGroupMemberService.getGroupMemberId(groupContent.getGroupId(),
+                        groupContent.getAppId());
+                groupContent.setMemberId(groupMemberIds);
+                messageStoreService.storeGroupOfflineMessage(offlineMessageContent,groupMemberIds);
+            }
             // 将当前消息加入缓存
             messageStoreService.setMessageFromMessageIdCache(groupContent.getAppId(),groupContent.getMessageId(),groupContent);
         });
@@ -174,13 +177,19 @@ public class GroupMessageService {
      *  转发消息给群聊中所有群成员的的所有在线端
      * @param groupContent
      */
-    private void dispatchMessage(GroupChatMessageContent groupContent) {
+    private boolean dispatchMessage(GroupChatMessageContent groupContent) {
+        boolean flag=true;
         for(String groupMemberId : groupContent.getMemberId()) {
             // 排除当前用户是发送消息的用户
             if(!groupMemberId.equals(groupContent.getFromId())) {
-                messageProducer.sendToUser(groupMemberId,GroupEventCommand.MSG_GROUP,groupContent,groupContent.getAppId());
+                List<ClientInfo> clientInfos = messageProducer.sendToUser(groupMemberId, GroupEventCommand.MSG_GROUP, groupContent, groupContent.getAppId());
+                // 一旦有一个用户所有端都不在线
+                if(clientInfos.isEmpty()) {
+                    flag=false;
+                }
             }
         }
+        return flag;
     }
 
 
@@ -203,4 +212,5 @@ public class GroupMessageService {
         dispatchMessage(content);
         return resp;
     }
+
 }

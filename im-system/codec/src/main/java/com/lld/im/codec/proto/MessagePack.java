@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * @author: Chackylee
  * @description: 消息服务发送给tcp的包体,tcp再根据该包体解析成Message发给客户端
+ *                即 tcp包与用户客户端之间信息传递的底层数据包类
  **/
 @Data
 public class MessagePack<T> implements Serializable {

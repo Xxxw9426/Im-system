@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lld.im.codec.pack.friendship.AddFriendGroupPack;
 import com.lld.im.codec.pack.friendship.DeleteFriendGroupPack;
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.DelFlagEnum;
 import com.lld.im.common.enums.FriendShipErrorCode;
 import com.lld.im.common.enums.command.FriendshipEventCommand;
@@ -16,7 +17,9 @@ import com.lld.im.service.friendship.model.req.AddFriendShipGroupReq;
 import com.lld.im.service.friendship.model.req.DeleteFriendShipGroupReq;
 import com.lld.im.service.friendship.service.ImFriendShipGroupMemberService;
 import com.lld.im.service.friendship.service.ImFriendShipGroupService;
+import com.lld.im.service.seq.RedisSeq;
 import com.lld.im.service.utils.MessageProducer;
+import com.lld.im.service.utils.WriteUserSeq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +44,14 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
 
     @Autowired
     MessageProducer messageProducer;
+
+
+    @Autowired
+    RedisSeq redisSeq;
+
+
+    @Autowired
+    WriteUserSeq writeUserSeq;
 
 
     /***
@@ -76,8 +87,10 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
             return ResponseVO.errorResponse(FriendShipErrorCode.FRIEND_SHIP_GROUP_IS_EXIST);
         }
         // 不存在的话，创建分组
+        Long seq = redisSeq.doGetSeq(req.getAppId() + ":" + Constants.SeqConstants.FriendshipGroup);
         ImFriendShipGroupEntity insert=new ImFriendShipGroupEntity();
         insert.setAppId(req.getAppId());
+        insert.setSequence(seq);
         insert.setGroupName(req.getGroupName());
         insert.setFromId(req.getFromId());
         insert.setCreateTime(System.currentTimeMillis());
@@ -109,8 +122,10 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
         AddFriendGroupPack pack=new AddFriendGroupPack();
         pack.setFromId(req.getFromId());
         pack.setGroupName(req.getGroupName());
+        pack.setSequence(seq);
         messageProducer.sendToUserExceptClient(req.getFromId(), FriendshipEventCommand.FRIEND_GROUP_ADD,
                 pack,new ClientInfo(req.getAppId(),req.getClientType(),req.getImei()));
+        writeUserSeq.writeUserSeq(req.getAppId(), req.getFromId(), Constants.SeqConstants.FriendshipGroup, seq);
 
         return ResponseVO.successResponse();
     }
@@ -158,21 +173,25 @@ public class ImFriendShipGroupServiceImpl implements ImFriendShipGroupService {
             ImFriendShipGroupEntity entity=imFriendShipGroupMapper.selectOne(query);
             // 如果存在该分组则删除分组与分组下的所有成员
             if(entity!=null) {
+                Long seq = redisSeq.doGetSeq(req.getAppId() + ":" + Constants.SeqConstants.FriendshipGroup);
                 // 更新数据库中当前分组的删除字段
                 ImFriendShipGroupEntity update=new ImFriendShipGroupEntity();
                 update.setGroupId(entity.getGroupId());
                 update.setDelFlag(DelFlagEnum.DELETE.getCode());
+                update.setSequence(seq);
                 imFriendShipGroupMapper.updateById(update);
                 // 调用memberService层的删除分组中的所有成员的办法删除所有成员
                 imFriendShipGroupMemberService.clearGroupMember(entity.getGroupId());
 
                 // 删除好友分组成功后发送tcp通知
                 DeleteFriendGroupPack pack=new DeleteFriendGroupPack();
+                pack.setSequence(seq);
                 pack.setFromId(req.getFromId());
                 pack.setGroupName(groupName);
                 //TCP通知
                 messageProducer.sendToUserExceptClient(req.getFromId(), FriendshipEventCommand.FRIEND_GROUP_DELETE,
                         pack,new ClientInfo(req.getAppId(),req.getClientType(),req.getImei()));
+                writeUserSeq.writeUserSeq(req.getAppId(), req.getFromId(), Constants.SeqConstants.FriendshipGroup, seq);
 
             }
         }

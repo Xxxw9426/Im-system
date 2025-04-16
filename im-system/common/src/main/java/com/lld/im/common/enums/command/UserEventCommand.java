@@ -16,19 +16,19 @@ public enum UserEventCommand implements Command{
 
 
     /**
-     * 4001
+     * 4001 用户在线状态变化(tcp服务发送给业务逻辑service层)
      */
     USER_ONLINE_STATUS_CHANGE(4001),
 
 
     /**
-     * 用户在线状态通知报文 4004
+     * 用户在线状态通知报文 4004(业务逻辑service层发送给其他用户在线客户端)
      */
     USER_ONLINE_STATUS_CHANGE_NOTIFY(4004),
 
 
     /**
-     * 用户在线状态通知同步报文 4005
+     * 用户在线状态通知同步报文 4005(业务逻辑service层发送给自身其他在线客户端)
      */
     USER_ONLINE_STATUS_CHANGE_NOTIFY_SYNC(4005),
 

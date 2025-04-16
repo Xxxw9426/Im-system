@@ -38,7 +38,7 @@ public class GateWayInterceptor implements HandlerInterceptor {
             return false;
         }
         // 获取请求参数中的操作人
-        String identifier = request.getParameter("identifier");
+        String identifier = request.getParameter("operator");
         if(StringUtils.isBlank(identifier)){
             resp(ResponseVO.errorResponse(GateWayErrorCode.OPERATOR_NOT_EXIST),response);
             return false;

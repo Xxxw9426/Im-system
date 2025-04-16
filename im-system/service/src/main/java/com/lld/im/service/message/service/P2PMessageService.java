@@ -1,8 +1,10 @@
 package com.lld.im.service.message.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.lld.im.codec.pack.message.ChatMessageAck;
 import com.lld.im.codec.pack.message.MessageReceiveServerAckPack;
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.config.AppConfig;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.ConversationTypeEnum;
 import com.lld.im.common.enums.command.MessageCommand;
@@ -12,6 +14,7 @@ import com.lld.im.common.model.message.OfflineMessageContent;
 import com.lld.im.service.message.model.req.SendMessageReq;
 import com.lld.im.service.message.model.resp.SendMessageResp;
 import com.lld.im.service.seq.RedisSeq;
+import com.lld.im.service.utils.CallbackService;
 import com.lld.im.service.utils.ConversationIdGenerate;
 import com.lld.im.service.utils.MessageProducer;
 import org.slf4j.Logger;
@@ -53,6 +56,14 @@ public class P2PMessageService {
 
     @Autowired
     RedisSeq redisSeq;
+
+
+    @Autowired
+    AppConfig appConfig;
+
+
+    @Autowired
+    CallbackService callbackService;
 
 
     private final ThreadPoolExecutor threadPoolExecutor;
@@ -108,6 +119,18 @@ public class P2PMessageService {
             return;
         }
 
+        // 回调
+        ResponseVO responseVO = ResponseVO.successResponse();
+        if(appConfig.isSendMessageAfterCallback()){
+            responseVO = callbackService.beforeCallback(messageContent.getAppId(), Constants.CallbackCommand.SendMessageBefore
+                    , JSONObject.toJSONString(messageContent));
+        }
+
+        if(!responseVO.isOk()){
+            ack(messageContent,responseVO);
+            return;
+        }
+
         // 将生成seq提取到外面来的目的是，不同服务对于seq的依赖程度不同，我们可以根据我们对seq的依赖程度来实现这部分逻辑，
         // 可以给这段seq有关的代码加上try catch语句，根据我们项目中对seq的需要来完成逻辑。
         // 在插入合法消息之前为这个消息生成一个seq
@@ -121,11 +144,6 @@ public class P2PMessageService {
         threadPoolExecutor.execute(()->{
             // 数据持久化，向单聊消息表中插入单聊的消息
             messageStoreService.storeP2PMessage(messageContent);
-            // 向redis中插入离线消息
-            OfflineMessageContent offlineMessageContent = new OfflineMessageContent();
-            BeanUtils.copyProperties(messageContent,offlineMessageContent);
-            offlineMessageContent.setConversationType(ConversationTypeEnum.P2P.getCode());
-            messageStoreService.storeOfflineMessage(offlineMessageContent);
             // 分发消息的主要流程
             // 1. 回ack成功给消息发送者
             ack(messageContent,ResponseVO.successResponse());
@@ -136,9 +154,23 @@ public class P2PMessageService {
             // 将messageId存到缓存中
             messageStoreService.setMessageFromMessageIdCache(messageContent.getAppId(),messageContent.getMessageId(),messageContent);
             if(list.isEmpty()) {
-                // 如果接收方不在线，则由服务端发送消息确认ack
+                // 如果接收方不在线
+                // 向redis中插入离线消息
+                OfflineMessageContent offlineMessageContent = new OfflineMessageContent();
+                BeanUtils.copyProperties(messageContent,offlineMessageContent);
+                offlineMessageContent.setConversationType(ConversationTypeEnum.P2P.getCode());
+                messageStoreService.storeOfflineMessage(offlineMessageContent);
+                // 由服务端发送消息确认ack
                 receiveAck(messageContent);
             }
+
+            // 回调
+            if(appConfig.isSendMessageAfterCallback()){
+                callbackService.callback(messageContent.getAppId(),Constants.CallbackCommand.SendMessageAfter,
+                        JSONObject.toJSONString(messageContent));
+            }
+
+            logger.info("消息处理完成：{}",messageContent.getMessageId());
         });
     }
 

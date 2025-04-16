@@ -2,11 +2,13 @@ package com.lld.im.service.message.mq;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.lld.im.common.constant.Constants;
 import com.lld.im.common.enums.command.MessageCommand;
 import com.lld.im.common.model.message.MessageContent;
 import com.lld.im.common.model.message.MessageReadContent;
 import com.lld.im.common.model.message.MessageReceiveAckContent;
+import com.lld.im.common.model.message.RecallMessageContent;
 import com.lld.im.service.message.service.MessageSyncService;
 import com.lld.im.service.message.service.P2PMessageService;
 import com.rabbitmq.client.Channel;
@@ -24,6 +26,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @Author: 萱子王
@@ -86,6 +89,11 @@ public class ChatOperateReceiver {
                 MessageReadContent readContent = jsonObject.toJavaObject(MessageReadContent.class);
                 messageSyncService.readMark(readContent);
 
+            // TODO 如果当前指令是撤回消息
+            } else if(Objects.equals(command, MessageCommand.MSG_RECALL.getCommand())) {
+                RecallMessageContent messageContent = JSON.parseObject(msg, new TypeReference<RecallMessageContent>() {
+                }.getType());
+                messageSyncService.recallMessage(messageContent);
             }
 
             channel.basicAck(deliveryTag,false);

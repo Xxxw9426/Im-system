@@ -19,22 +19,22 @@ public class WebConfig implements WebMvcConfigurer {
     GateWayInterceptor gateWayInterceptor;
 
     // 指定我们拦截器的地址为拦截除了登录之外的所有路径
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(gateWayInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/v1/user/login")
-                .excludePathPatterns("/v1/message/checkSend");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(gateWayInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/v1/user/login")
+//                .excludePathPatterns("/v1/message/checkSend");
+//    }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowCredentials(true)
-                .maxAge(3600)
-                .allowedHeaders("*");
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("*")
+//                .allowedMethods("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS")
+//                .allowCredentials(true)
+//                .maxAge(3600)
+//                .allowedHeaders("*");
+//    }
 
 }

@@ -61,4 +61,14 @@ public interface ImUserService {
      * @return
      */
    public ResponseVO login(LoginReq req);
+
+
+    /***
+     * 获取用户sequence，判断用户是否需要拉取增量
+     * @param req
+     * @return
+     */
+   public ResponseVO getUserSequence(GetUserSequenceReq req);
+
+
 }

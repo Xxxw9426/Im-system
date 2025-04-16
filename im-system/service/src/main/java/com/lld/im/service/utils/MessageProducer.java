@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * @Author: 萱子王
  * @CreateTime: 2025-03-27
- * @Description: 向mq中发送tpc通知消息
+ * @Description: 向tcp层发送消息，通过tcp层向用户客户端发送数据信息
  * @Version: 1.0
  */
 @Component

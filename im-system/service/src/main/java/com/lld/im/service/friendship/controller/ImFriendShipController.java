@@ -1,6 +1,7 @@
 package com.lld.im.service.friendship.controller;
 
 import com.lld.im.common.ResponseVO;
+import com.lld.im.common.model.SyncReq;
 import com.lld.im.service.friendship.model.req.*;
 import com.lld.im.service.friendship.service.ImFriendShipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,6 +164,20 @@ public class ImFriendShipController {
     public ResponseVO checkBlack(@RequestBody @Validated CheckFriendShipReq req, Integer appId) {
         req.setAppId(appId);
         return imFriendShipService.checkBlack(req);
+    }
+
+
+    /***
+     * 好友列表增量拉取接口
+     * @param req
+     * @param appId
+     * @return
+     */
+    @RequestMapping("/syncFriendshipList")
+    public ResponseVO syncFriendshipList(@RequestBody @Validated SyncReq req,Integer appId,String operator) {
+        req.setAppId(appId);
+        req.setOperator(operator);
+        return imFriendShipService.syncFriendshipList(req);
     }
 
 }
